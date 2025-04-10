@@ -30,6 +30,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.sopt.at.component.NoRippleInteractionSource
 import org.sopt.at.screen.SignInActivity
 import org.sopt.at.screen.registeredId
 
@@ -97,7 +98,8 @@ fun MyScreen(
             colors = ButtonDefaults.outlinedButtonColors(
                 containerColor = Color.Black, contentColor = Color.White
             ),
-            border = BorderStroke(1.dp, Color.DarkGray)
+            border = BorderStroke(1.dp, Color.DarkGray),
+            interactionSource = NoRippleInteractionSource
         ) {
             Text("로그아웃", color = Color.LightGray)
         }

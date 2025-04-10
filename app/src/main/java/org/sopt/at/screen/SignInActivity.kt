@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 import org.sopt.at.MyActivity
 import org.sopt.at.component.CommonTextField
+import org.sopt.at.component.NoRippleInteractionSource
 import org.sopt.at.component.PasswordTextField
 
 
@@ -112,7 +113,8 @@ fun SignInScreen(
                 shape = RoundedCornerShape(0.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.LightGray, contentColor = Color.Black
-                )
+                ),
+                interactionSource = NoRippleInteractionSource
             ) {
                 Text("로그인하기")
             }
@@ -142,7 +144,11 @@ fun SignInScreen(
                     text = "회원가입",
                     color = Color.LightGray,
                     fontSize = 16.sp,
-                    modifier = Modifier.clickable { onSignUpClick() })
+                    modifier = Modifier.clickable(
+                        interactionSource = NoRippleInteractionSource, indication = null
+                    ) {
+                        onSignUpClick()
+                    })
             }
         }
     }
