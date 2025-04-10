@@ -38,110 +38,105 @@ fun SignUpScreen(onSignUpSuccess: () -> Unit) {
     var password by remember { mutableStateOf("") }
     val context = LocalContext.current
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black)
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        if (step == 1) {
-            Text("아이디를 입력해주세요.", fontSize = 20.sp, color = Color.White)
 
-            Spacer(Modifier.height(20.dp))
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black)
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            if (step == 1) {
+                Text("아이디를 입력해주세요.", fontSize = 20.sp, color = Color.White)
 
-            Column(modifier = Modifier.fillMaxWidth()) {
-                CommonTextField(
-                    value = id,
-                    onValueChange = { id = it },
-                    modifier = Modifier.fillMaxWidth()
-                )
+                Spacer(Modifier.height(20.dp))
 
-                Spacer(Modifier.height(8.dp))
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    CommonTextField(
+                        value = id,
+                        onValueChange = { id = it },
+                        modifier = Modifier.fillMaxWidth()
+                    )
 
-                Text(
-                    "영문 소문자 또는 영문 소문자, 숫자 조합 6~12 자리",
-                    color = Color.LightGray,
-                    fontSize = 12.sp,
-                    modifier = Modifier.padding(start = 5.dp)
-                )
-            }
+                    Spacer(Modifier.height(8.dp))
 
-            Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        "영문 소문자 또는 영문 소문자, 숫자 조합 6~12 자리",
+                        color = Color.LightGray,
+                        fontSize = 12.sp,
+                        modifier = Modifier.padding(start = 5.dp)
+                    )
+                }
 
-            OutlinedButton(
-                onClick = {
-                    if (id.matches(Regex("^[a-z0-9]{6,12}$"))) {
-                        step = 2
-                    } else {
-                        Toast.makeText(context, "아이디 형식을 확인해주세요.", Toast.LENGTH_SHORT).show()
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 12.dp),
-                shape = RoundedCornerShape(0.dp),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = Color.Black,
-                    contentColor = Color.White
-                ),
-                border = BorderStroke(1.dp, Color.DarkGray)
-            ) {
-                Text("다음", color = Color.LightGray)
-            }
-        } else {
-            Text("비밀번호를 입력해주세요.", fontSize = 20.sp, color = Color.White)
+                Spacer(modifier = Modifier.weight(1f))
 
-            Spacer(Modifier.height(20.dp))
+                OutlinedButton(
+                    onClick = {
+                        if (id.matches(Regex("^[a-z0-9]{6,12}$"))) {
+                            step = 2
+                        } else {
+                            Toast.makeText(context, "아이디 형식을 확인해주세요.", Toast.LENGTH_SHORT).show()
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 12.dp),
+                    shape = RoundedCornerShape(0.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = Color.Black,
+                        contentColor = Color.White
+                    ),
+                    border = BorderStroke(1.dp, Color.DarkGray)
+                ) {
+                    Text("다음", color = Color.LightGray)
+                }
+            } else {
+                Text("비밀번호를 입력해주세요.", fontSize = 20.sp, color = Color.White)
 
-            Column(modifier = Modifier.fillMaxWidth()) {
-                PasswordTextField(
-                    value = password,
-                    onValueChange = { password = it },
-                    modifier = Modifier.fillMaxWidth()
-                )
+                Spacer(Modifier.height(20.dp))
 
-                Spacer(Modifier.height(8.dp))
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    PasswordTextField(
+                        value = password,
+                        onValueChange = { password = it },
+                        modifier = Modifier.fillMaxWidth()
+                    )
 
-                Text(
-                    "영문, 숫자, 특수문자(~!@#\$%^&*) 조합 8~15자리",
-                    color = Color.LightGray,
-                    fontSize = 12.sp,
-                    modifier = Modifier.padding(start = 5.dp)
-                )
-            }
+                    Spacer(Modifier.height(8.dp))
 
-            Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        "영문, 숫자, 특수문자(~!@#\$%^&*) 조합 8~15자리",
+                        color = Color.LightGray,
+                        fontSize = 12.sp,
+                        modifier = Modifier.padding(start = 5.dp)
+                    )
+                }
 
-            OutlinedButton(
-                onClick = {
-                    if (password.matches(Regex("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[~!@#\$%^&*])[A-Za-z\\d~!@#\$%^&*]{8,15}\$"))) {
-                        registeredId = id
-                        registeredPassword = password
-                        Toast.makeText(context, "회원가입 성공!", Toast.LENGTH_SHORT).show()
-                        onSignUpSuccess()
-                    } else {
-                        Toast.makeText(context, "비밀번호 형식을 확인해주세요.", Toast.LENGTH_SHORT).show()
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 12.dp),
-                shape = RoundedCornerShape(0.dp),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = Color.Black,
-                    contentColor = Color.White
-                ),
-                border = BorderStroke(1.dp, Color.LightGray)
-            ) {
-                Text("완료", color = Color.DarkGray)
+                Spacer(modifier = Modifier.weight(1f))
+
+                OutlinedButton(
+                    onClick = {
+                        if (password.matches(Regex("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[~!@#\$%^&*])[A-Za-z\\d~!@#\$%^&*]{8,15}\$"))) {
+                            registeredId = id
+                            registeredPassword = password
+                            Toast.makeText(context, "회원가입 성공!", Toast.LENGTH_SHORT).show()
+                            onSignUpSuccess()
+                        } else {
+                            Toast.makeText(context, "비밀번호 형식을 확인해주세요.", Toast.LENGTH_SHORT).show()
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 12.dp),
+                    shape = RoundedCornerShape(0.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = Color.Black,
+                        contentColor = Color.White
+                    ),
+                    border = BorderStroke(1.dp, Color.DarkGray)
+                ) {
+                    Text("완료", color = Color.LightGray)
+                }
             }
         }
     }
-}
-
-@Preview(showBackground = true, backgroundColor = 0xFF000000)
-@Composable
-fun SignUpScreenPreview() {
-    SignUpScreen(onSignUpSuccess = {})
-}

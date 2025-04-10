@@ -35,6 +35,12 @@
             android:label="회원가입"
             android:theme="@style/Theme.ATSOPTANDROID" />
 
+        <activity
+            android:name=".MyActivity"
+            android:exported="true"
+            android:label="MY"
+            android:theme="@style/Theme.ATSOPTANDROID" />
+
     </application>
 
 </manifest>
