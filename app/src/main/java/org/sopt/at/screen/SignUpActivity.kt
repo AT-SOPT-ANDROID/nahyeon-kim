@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.sopt.at.component.CommonTextField
@@ -49,15 +50,22 @@ fun SignUpScreen(onSignUpSuccess: () -> Unit) {
 
             Spacer(Modifier.height(20.dp))
 
-            CommonTextField(
-                value = id,
-                onValueChange = { id = it },
-                modifier = Modifier.fillMaxWidth()
-            )
+            Column(modifier = Modifier.fillMaxWidth()) {
+                CommonTextField(
+                    value = id,
+                    onValueChange = { id = it },
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-            Spacer(Modifier.height(12.dp))
+                Spacer(Modifier.height(8.dp))
 
-            Text("영문 소문자 또는 영문 소문자, 숫자 조합 6~12 자리", color = Color.White)
+                Text(
+                    "영문 소문자 또는 영문 소문자, 숫자 조합 6~12 자리",
+                    color = Color.LightGray,
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(start = 5.dp)
+                )
+            }
 
             Spacer(modifier = Modifier.weight(1f))
 
@@ -86,15 +94,22 @@ fun SignUpScreen(onSignUpSuccess: () -> Unit) {
 
             Spacer(Modifier.height(20.dp))
 
-            PasswordTextField(
-                value = password,
-                onValueChange = { password = it },
-                modifier = Modifier.fillMaxWidth()
-            )
+            Column(modifier = Modifier.fillMaxWidth()) {
+                PasswordTextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-            Spacer(Modifier.height(12.dp))
+                Spacer(Modifier.height(8.dp))
 
-            Text("영문, 숫자, 특수문자(~!@#\$%^&*) 조합 8~15자리", color = Color.White)
+                Text(
+                    "영문, 숫자, 특수문자(~!@#\$%^&*) 조합 8~15자리",
+                    color = Color.LightGray,
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(start = 5.dp)
+                )
+            }
 
             Spacer(modifier = Modifier.weight(1f))
 
@@ -123,4 +138,10 @@ fun SignUpScreen(onSignUpSuccess: () -> Unit) {
             }
         }
     }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFF000000)
+@Composable
+fun SignUpScreenPreview() {
+    SignUpScreen(onSignUpSuccess = {})
 }

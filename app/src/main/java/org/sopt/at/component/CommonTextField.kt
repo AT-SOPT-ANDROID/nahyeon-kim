@@ -3,7 +3,6 @@ package org.sopt.at.component
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.graphics.Color
 
 @Composable
