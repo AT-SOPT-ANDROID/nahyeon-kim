@@ -1,15 +1,15 @@
 package org.sopt.at.component
 
-import androidx.compose.material3.*
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 
 @Composable
 fun CommonTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier
+    value: String, onValueChange: (String) -> Unit, modifier: Modifier = Modifier
 ) {
     OutlinedTextField(
         value = value,
