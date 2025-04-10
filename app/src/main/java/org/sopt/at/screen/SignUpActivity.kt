@@ -63,7 +63,7 @@ fun SignUpScreen(onSignUpSuccess: () -> Unit) {
 
             OutlinedButton(
                 onClick = {
-                    if (id.matches(Regex("^[a-zA-Z0-9]{6,12}$"))) {
+                    if (id.matches(Regex("^[a-z0-9]{6,12}$"))) {
                         step = 2
                     } else {
                         Toast.makeText(context, "아이디 형식을 확인해주세요.", Toast.LENGTH_SHORT).show()

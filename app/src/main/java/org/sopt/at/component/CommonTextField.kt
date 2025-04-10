@@ -23,9 +23,9 @@ fun CommonTextField(
             unfocusedContainerColor = Color.DarkGray,
             focusedBorderColor = Color.White,
             unfocusedBorderColor = Color.DarkGray,
-            focusedTextColor = Color.White,      // 입력 텍스트 색상
-            unfocusedTextColor = Color.White,    // 입력 텍스트 색상
-            cursorColor = Color.White            // 커서 색상
+            focusedTextColor = Color.White,
+            unfocusedTextColor = Color.White,
+            cursorColor = Color.White
         )
     )
 }
