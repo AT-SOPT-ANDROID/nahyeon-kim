@@ -1,5 +1,6 @@
 package org.sopt.at.screen
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -27,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.sopt.at.component.BackButton
 import org.sopt.at.component.CommonTextField
 import org.sopt.at.component.NoRippleInteractionSource
 import org.sopt.at.component.PasswordTextField
@@ -35,11 +37,18 @@ class SignUpActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val context = this
             SignUpScreen(
-                onSignUpSuccess = { finish() })
+                onSignUpSuccess = {
+                    val intent = Intent(context, SignInActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                    }
+                    context.startActivity(intent)
+                })
         }
     }
 }
+
 
 @Composable
 fun SignUpScreen(onSignUpSuccess: () -> Unit) {
@@ -48,7 +57,6 @@ fun SignUpScreen(onSignUpSuccess: () -> Unit) {
     var password by remember { mutableStateOf("") }
     val context = LocalContext.current
 
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -56,6 +64,13 @@ fun SignUpScreen(onSignUpSuccess: () -> Unit) {
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
+        BackButton(
+            modifier = Modifier.align(Alignment.Start)
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
         if (step == 1) {
             Text("아이디를 입력해주세요.", fontSize = 20.sp, color = Color.White)
 

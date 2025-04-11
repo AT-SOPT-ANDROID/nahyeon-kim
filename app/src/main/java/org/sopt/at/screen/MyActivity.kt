@@ -3,6 +3,7 @@ package org.sopt.at
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -26,10 +27,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.sopt.at.component.BackButton
 import org.sopt.at.component.NoRippleInteractionSource
 import org.sopt.at.screen.SignInActivity
 import org.sopt.at.screen.registeredId
@@ -41,10 +43,13 @@ class MyActivity : ComponentActivity() {
         val userId = registeredId ?: "사용자"
 
         setContent {
+            val context = this
             MyScreen(
                 userId = userId, onLogout = {
-                    startActivity(Intent(this, SignInActivity::class.java))
-                    finish()
+                    val intent = Intent(context, SignInActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                    }
+                    context.startActivity(intent)
                 })
         }
     }
@@ -54,7 +59,8 @@ class MyActivity : ComponentActivity() {
 fun MyScreen(
     userId: String, onLogout: () -> Unit
 ) {
-    val context = LocalContext.current
+
+    val activity = LocalActivity.current
 
     Column(
         modifier = Modifier
@@ -63,6 +69,11 @@ fun MyScreen(
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        BackButton(
+            modifier = Modifier.align(Alignment.Start)
+        )
+
+        Spacer(Modifier.height(20.dp))
 
         Box(
             modifier = Modifier
@@ -104,4 +115,11 @@ fun MyScreen(
             Text("로그아웃", color = Color.LightGray)
         }
     }
+}
+
+@Composable
+@Preview(showBackground = true, backgroundColor = 0xFF000000)
+fun PreviewMyScreen() {
+    MyScreen(
+        userId = "preview_user", onLogout = {})
 }

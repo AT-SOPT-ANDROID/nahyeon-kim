@@ -30,14 +30,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 import org.sopt.at.MyActivity
+import org.sopt.at.component.BackButton
 import org.sopt.at.component.CommonTextField
 import org.sopt.at.component.NoRippleInteractionSource
 import org.sopt.at.component.PasswordTextField
-
 
 var registeredId: String? = null
 var registeredPassword: String? = null
@@ -46,14 +48,22 @@ class SignInActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            SignInScreen(onSignUpClick = {
-                startActivity(Intent(this, SignUpActivity::class.java))
-            }, onLoginSuccess = {
-                startActivity(Intent(this, MyActivity::class.java))
-            })
+            val context = this
+            SignInScreen(
+                onSignUpClick = {
+                    startActivity(Intent(this, SignUpActivity::class.java))
+                },
+                onLoginSuccess = {
+                    val intent = Intent(context, MyActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                    }
+                    context.startActivity(intent)
+                }
+            )
         }
     }
 }
+
 
 @Composable
 fun SignInScreen(
@@ -66,9 +76,8 @@ fun SignInScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
-        }, containerColor = Color.Black
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        containerColor = Color.Black
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -76,7 +85,10 @@ fun SignInScreen(
                 .padding(paddingValues)
                 .padding(24.dp)
         ) {
-            Spacer(modifier = Modifier.height(56.dp))
+
+            BackButton()
+
+            Spacer(modifier = Modifier.height(32.dp))
 
             Text(
                 text = "TVING ID 로그인",
@@ -86,7 +98,9 @@ fun SignInScreen(
             )
 
             CommonTextField(
-                value = id, onValueChange = { id = it }, modifier = Modifier.fillMaxWidth()
+                value = id,
+                onValueChange = { id = it },
+                modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(Modifier.height(12.dp))
@@ -112,7 +126,8 @@ fun SignInScreen(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(0.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.LightGray, contentColor = Color.Black
+                    containerColor = Color.LightGray,
+                    contentColor = Color.Black
                 ),
                 interactionSource = NoRippleInteractionSource
             ) {
@@ -131,13 +146,17 @@ fun SignInScreen(
                 Text("아이디 찾기", color = Color.LightGray, fontSize = 16.sp)
 
                 VerticalDivider(
-                    modifier = Modifier.height(22.dp), color = Color.DarkGray, thickness = 1.5.dp
+                    modifier = Modifier.height(22.dp),
+                    color = Color.DarkGray,
+                    thickness = 1.5.dp
                 )
 
                 Text("비밀번호 찾기", color = Color.LightGray, fontSize = 16.sp)
 
                 VerticalDivider(
-                    modifier = Modifier.height(22.dp), color = Color.DarkGray, thickness = 1.5.dp
+                    modifier = Modifier.height(22.dp),
+                    color = Color.DarkGray,
+                    thickness = 1.5.dp
                 )
 
                 Text(
@@ -145,11 +164,23 @@ fun SignInScreen(
                     color = Color.LightGray,
                     fontSize = 16.sp,
                     modifier = Modifier.clickable(
-                        interactionSource = NoRippleInteractionSource, indication = null
+                        interactionSource = NoRippleInteractionSource,
+                        indication = null
                     ) {
                         onSignUpClick()
-                    })
+                    }
+                )
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SignInScreenPreview() {
+    val context = LocalContext.current
+    SignInScreen(
+        onSignUpClick = {},
+        onLoginSuccess = {}
+    )
 }
