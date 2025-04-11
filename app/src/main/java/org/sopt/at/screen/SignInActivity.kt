@@ -30,6 +30,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -160,6 +165,31 @@ fun SignInScreen(
                         onSignUpClick()
                     })
             }
+            Spacer(Modifier.height(16.dp))
+
+            Text(
+                text = buildAnnotatedString {
+                    append("이 사이트는 Google reCAPTCHA로 보호되며,\n")
+                    append("Google ")
+
+                    withStyle(style = SpanStyle(textDecoration = TextDecoration.Underline)) {
+                        append("개인정보 처리방침")
+                    }
+
+                    append("과 ")
+
+                    withStyle(style = SpanStyle(textDecoration = TextDecoration.Underline)) {
+                        append("서비스 약관")
+                    }
+
+                    append("이 적용됩니다.")
+                },
+                color = Color.DarkGray,
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                textAlign = TextAlign.Center
+            )
+
+
         }
     }
 }
