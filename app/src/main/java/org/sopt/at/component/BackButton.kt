@@ -22,7 +22,7 @@ fun BackButton(
 
     Box(
         modifier = modifier
-            .padding(2.dp)
+            .padding(top = 25.dp)
             .clickable(
                 interactionSource = NoRippleInteractionSource, indication = null
             ) {
