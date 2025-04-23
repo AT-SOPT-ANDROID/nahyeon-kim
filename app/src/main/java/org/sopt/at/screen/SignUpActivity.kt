@@ -23,7 +23,7 @@ import org.sopt.at.viewmodel.AuthViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun SignUpScreen(onSignUpSuccess: () -> Unit, authViewModel: AuthViewModel = viewModel()) {
+fun SignUpScreen(onSignUpSuccess: () -> Unit, authViewModel: AuthViewModel) {
     var step by remember { mutableStateOf(1) }
     var id by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -132,6 +132,7 @@ fun SignUpScreen(onSignUpSuccess: () -> Unit, authViewModel: AuthViewModel = vie
             ) {
                 Text("완료", color = Color.LightGray)
             }
+
         }
     }
 }

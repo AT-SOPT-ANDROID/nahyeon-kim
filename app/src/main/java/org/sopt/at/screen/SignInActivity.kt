@@ -2,7 +2,6 @@ package org.sopt.at.screen
 
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -37,7 +36,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 fun SignInScreen(
     onSignUpClick: () -> Unit,
     onLoginSuccess: () -> Unit,
-    authViewModel: AuthViewModel = viewModel()
+    authViewModel: AuthViewModel
 ) {
     var id by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -85,11 +84,18 @@ fun SignInScreen(
 
             OutlinedButton(
                 onClick = {
-                    if (id == authViewModel.registeredId.value && password == authViewModel.registeredPassword.value) {
-                        onLoginSuccess()
+                    if (id.isNotBlank() && password.isNotBlank()) {
+
+                        if (id == authViewModel.registeredId.value && password == authViewModel.registeredPassword.value) {
+                            onLoginSuccess()
+                        } else {
+                            scope.launch {
+                                snackbarHostState.showSnackbar("ID 또는 비밀번호가 일치하지 않습니다.")
+                            }
+                        }
                     } else {
                         scope.launch {
-                            snackbarHostState.showSnackbar("ID 또는 비밀번호가 일치하지 않습니다.")
+                            snackbarHostState.showSnackbar("아이디와 비밀번호를 입력해 주세요.")
                         }
                     }
                 },
@@ -103,6 +109,7 @@ fun SignInScreen(
             ) {
                 Text("로그인하기")
             }
+
 
             Spacer(Modifier.height(16.dp))
 
