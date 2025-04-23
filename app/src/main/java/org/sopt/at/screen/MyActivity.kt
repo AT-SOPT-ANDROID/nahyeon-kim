@@ -1,21 +1,11 @@
 package org.sopt.at
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
@@ -31,26 +21,36 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import org.sopt.at.component.BackButton
 import org.sopt.at.component.NoRippleInteractionSource
-import org.sopt.at.screen.SignInActivity
-import org.sopt.at.screen.registeredId
 
 class MyActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val userId = registeredId ?: "사용자"
-
         setContent {
-            val context = this
-            MyScreen(
-                userId = userId, onLogout = {
-                    val intent = Intent(context, SignInActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                    }
-                    context.startActivity(intent)
-                })
+            val navController = rememberNavController()
+
+            NavHost(navController = navController, startDestination = "my_screen") {
+                composable("my_screen") {
+                    MyScreen(
+                        userId = "사용자",
+                        onLogout = {
+                            navController.navigate("sign_in_screen") {
+                                popUpTo("my_screen") { inclusive = true }
+                            }
+                        })
+                }
+
+
+                composable("sign_in_screen") {
+                    SignInScreen()
+                }
+            }
         }
     }
 }
@@ -59,9 +59,6 @@ class MyActivity : ComponentActivity() {
 fun MyScreen(
     userId: String, onLogout: () -> Unit
 ) {
-
-    val activity = LocalActivity.current
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -115,6 +112,11 @@ fun MyScreen(
             Text("로그아웃", color = Color.LightGray)
         }
     }
+}
+
+@Composable
+fun SignInScreen() {
+    Text(text = "Sign In Screen")
 }
 
 @Composable

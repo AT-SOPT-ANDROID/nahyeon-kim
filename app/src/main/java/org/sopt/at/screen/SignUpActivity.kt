@@ -1,27 +1,14 @@
 package org.sopt.at.screen
 
-import android.content.Intent
-import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,26 +19,11 @@ import org.sopt.at.component.BackButton
 import org.sopt.at.component.CommonTextField
 import org.sopt.at.component.NoRippleInteractionSource
 import org.sopt.at.component.PasswordTextField
-
-class SignUpActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            val context = this
-            SignUpScreen(
-                onSignUpSuccess = {
-                    val intent = Intent(context, SignInActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                    }
-                    context.startActivity(intent)
-                })
-        }
-    }
-}
-
+import org.sopt.at.viewmodel.AuthViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun SignUpScreen(onSignUpSuccess: () -> Unit) {
+fun SignUpScreen(onSignUpSuccess: () -> Unit, authViewModel: AuthViewModel = viewModel()) {
     var step by remember { mutableStateOf(1) }
     var id by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -140,8 +112,8 @@ fun SignUpScreen(onSignUpSuccess: () -> Unit) {
             OutlinedButton(
                 onClick = {
                     if (password.matches(Regex("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[~!@#\$%^&*])[A-Za-z\\d~!@#\$%^&*]{8,15}\$"))) {
-                        registeredId = id
-                        registeredPassword = password
+                        authViewModel.registeredId.value = id
+                        authViewModel.registeredPassword.value = password
                         Toast.makeText(context, "회원가입 성공!", Toast.LENGTH_SHORT).show()
                         onSignUpSuccess()
                     } else {
