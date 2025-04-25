@@ -42,6 +42,7 @@ fun BottomNavBar(navController: NavController) {
         items.forEach { item ->
             val selected = currentRoute == item.route
             NavigationBarItem(
+                interactionSource = NoRippleInteractionSource,
                 selected = selected,
                 onClick = {
                     if (currentRoute != item.route) {
@@ -64,8 +65,7 @@ fun BottomNavBar(navController: NavController) {
                         text = item.label,
                         color = if (selected) Color.White else Color.Gray
                     )
-                },
-                interactionSource = NoRippleInteractionSource
+                }
             )
         }
     }
