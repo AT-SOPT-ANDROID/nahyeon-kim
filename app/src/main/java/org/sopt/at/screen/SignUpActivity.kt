@@ -75,7 +75,7 @@ fun SignUpScreen(onSignUpSuccess: () -> Unit, authViewModel: AuthViewModel) {
 
             OutlinedButton(
                 onClick = {
-                    if (id.matches(Regex("^[a-z0-9]{6,12}$"))) {
+                    if (authViewModel.isValidId(id)) {
                         step = 2
                     } else {
                         Toast.makeText(context, "아이디 형식을 확인해주세요.", Toast.LENGTH_SHORT).show()
@@ -119,11 +119,11 @@ fun SignUpScreen(onSignUpSuccess: () -> Unit, authViewModel: AuthViewModel) {
 
             OutlinedButton(
                 onClick = {
-                    if (password.matches(Regex("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[~!@#\$%^&*])[A-Za-z\\d~!@#\$%^&*]{8,15}\$"))) {
-                        authViewModel.registeredId.value = id
-                        authViewModel.registeredPassword.value = password
-                        Toast.makeText(context, "회원가입 성공!", Toast.LENGTH_SHORT).show()
-                        onSignUpSuccess()
+                    if (authViewModel.isValidPassword(password)) {
+                        if (authViewModel.registerUser(id, password)) {
+                            Toast.makeText(context, "회원가입 성공!", Toast.LENGTH_SHORT).show()
+                            onSignUpSuccess()
+                        }
                     } else {
                         Toast.makeText(context, "비밀번호 형식을 확인해주세요.", Toast.LENGTH_SHORT).show()
                     }
