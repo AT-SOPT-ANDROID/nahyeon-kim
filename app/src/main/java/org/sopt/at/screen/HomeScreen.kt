@@ -20,7 +20,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -33,7 +32,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -77,13 +75,10 @@ fun TopBar(navController: NavHostController, authViewModel: AuthViewModel) {
                     .size(36.dp)
                     .clickable {
                         navController.navigate("my")
-                    }
-            )
+                    })
         }
     }
 }
-
-
 
 
 @Composable
@@ -152,8 +147,7 @@ fun Top20Section(programs: List<TvProgram>) {
                                 color = Color.Black, offset = Offset(4f, 4f), blurRadius = 8f
                             )
                         ),
-                        modifier = Modifier
-                            .align(Alignment.BottomStart)
+                        modifier = Modifier.align(Alignment.BottomStart)
 
                     )
                 }
@@ -206,8 +200,7 @@ fun HomeScreen(
     authViewModel: AuthViewModel
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item { TopBar(navController, authViewModel) }
         item { Spacer(modifier = Modifier.height(16.dp)) }

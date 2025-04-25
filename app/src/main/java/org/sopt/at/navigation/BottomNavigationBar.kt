@@ -1,17 +1,16 @@
 package org.sopt.at.navigation
 
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import org.sopt.at.R
 import org.sopt.at.component.NoRippleInteractionSource
 
@@ -36,8 +35,7 @@ fun BottomNavBar(navController: NavController) {
     val currentRoute = navBackStackEntry?.destination?.route
 
     NavigationBar(
-        containerColor = Color.Black,
-        tonalElevation = 4.dp
+        containerColor = Color.Black, tonalElevation = 4.dp
     ) {
         items.forEach { item ->
             val selected = currentRoute == item.route
@@ -62,11 +60,9 @@ fun BottomNavBar(navController: NavController) {
                 },
                 label = {
                     Text(
-                        text = item.label,
-                        color = if (selected) Color.White else Color.Gray
+                        text = item.label, color = if (selected) Color.White else Color.Gray
                     )
-                }
-            )
+                })
         }
     }
 }

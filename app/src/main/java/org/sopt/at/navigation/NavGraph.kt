@@ -1,7 +1,5 @@
 package org.sopt.at.navigation
 
-import androidx.compose.animation.*
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -17,10 +15,10 @@ import org.sopt.at.MyScreen
 import org.sopt.at.screen.HistoryScreen
 import org.sopt.at.screen.HomeScreen
 import org.sopt.at.screen.LiveScreen
-import org.sopt.at.screen.SignInScreen
-import org.sopt.at.screen.SignUpScreen
 import org.sopt.at.screen.SearchScreen
 import org.sopt.at.screen.ShortsScreen
+import org.sopt.at.screen.SignInScreen
+import org.sopt.at.screen.SignUpScreen
 import org.sopt.at.viewmodel.AuthViewModel
 
 @Composable
@@ -43,8 +41,7 @@ fun AppNavGraph(navController: NavHostController) {
             if (currentRoute in bottomNavRoutes) {
                 BottomNavBar(navController)
             }
-        },
-        containerColor = Color.Black
+        }, containerColor = Color.Black
     ) { innerPadding ->
         NavHost(
             navController = navController,
@@ -69,27 +66,23 @@ fun AppNavGraph(navController: NavHostController) {
                         navController.navigate("signIn") {
                             popUpTo("signUp") { inclusive = true }
                         }
-                    },
-                    authViewModel = authViewModel
+                    }, authViewModel = authViewModel
                 )
             }
 
             composable("my") {
                 MyScreen(
-                    userId = authViewModel.registeredId.value,
-                    onLogout = {
+                    userId = authViewModel.registeredId.value, onLogout = {
                         navController.navigate("signIn") {
                             popUpTo("my") { inclusive = true }
                         }
-                    }
-                )
+                    })
             }
 
 
             composable(BottomNavItem.Home.route) {
                 HomeScreen(
-                    navController = navController,
-                    authViewModel = authViewModel
+                    navController = navController, authViewModel = authViewModel
                 )
             }
 

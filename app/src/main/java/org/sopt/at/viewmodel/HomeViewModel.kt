@@ -19,5 +19,5 @@ class HomeViewModel : ViewModel() {
 
     val top20List: List<TvProgram> = List(20) { _bannerList[it % _bannerList.size] }
 
-    val nowList : List<TvProgram> = _bannerList
+    val nowList: List<TvProgram> = _bannerList
 }
