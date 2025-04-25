@@ -1,9 +1,19 @@
 package org.sopt.at.screen
 
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -19,7 +29,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
@@ -27,14 +36,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import org.sopt.at.R
 import org.sopt.at.data.TvProgram
+import org.sopt.at.viewmodel.AuthViewModel
 import org.sopt.at.viewmodel.HomeViewModel
 
 
 @Composable
-fun TopBar() {
+fun TopBar(navController: NavHostController, authViewModel: AuthViewModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -64,11 +75,15 @@ fun TopBar() {
                 tint = Color.White,
                 modifier = Modifier
                     .size(36.dp)
-
+                    .clickable {
+                        navController.navigate("my")
+                    }
             )
         }
     }
 }
+
+
 
 
 @Composable
@@ -134,14 +149,11 @@ fun Top20Section(programs: List<TvProgram>) {
                         fontStyle = FontStyle.Italic,
                         style = MaterialTheme.typography.displayLarge.copy(
                             shadow = Shadow(
-                                color = Color.Black,
-                                offset = Offset(4f, 4f),
-                                blurRadius = 8f
+                                color = Color.Black, offset = Offset(4f, 4f), blurRadius = 8f
                             )
                         ),
                         modifier = Modifier
                             .align(Alignment.BottomStart)
-                            .padding(bottom = (-8).dp)
 
                     )
                 }
@@ -151,13 +163,9 @@ fun Top20Section(programs: List<TvProgram>) {
 }
 
 
-
-
-
-
 @Composable
-fun NowBoarding (programs: List<TvProgram>) {
-    Column (
+fun NowBoarding(programs: List<TvProgram>) {
+    Column(
         modifier = Modifier.padding(start = 16.dp)
     ) {
         Text(
@@ -167,7 +175,7 @@ fun NowBoarding (programs: List<TvProgram>) {
             modifier = Modifier.padding(bottom = 8.dp)
         )
 
-        LazyRow (
+        LazyRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(end = 16.dp)
         ) {
@@ -192,62 +200,21 @@ fun NowBoarding (programs: List<TvProgram>) {
 }
 
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = viewModel()) {
+fun HomeScreen(
+    navController: NavHostController,
+    viewModel: HomeViewModel = viewModel(),
+    authViewModel: AuthViewModel
+) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        item { TopBar() }
+        item { TopBar(navController, authViewModel) }
+        item { Spacer(modifier = Modifier.height(16.dp)) }
         item { BannerView(viewModel) }
         item { Top20Section(programs = viewModel.top20List) }
-        item { NowBoarding(programs =  viewModel.nowList) }
+        item { NowBoarding(programs = viewModel.nowList) }
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF000000)
-@Composable
-fun HomeScreenPreview() {
-    val dummyList = listOf(
-        TvProgram(id = 1, title = "신병", imageRes = R.drawable.tving1, rank = 1),
-        TvProgram(id = 2, title = "산지직송", imageRes = R.drawable.tving2, rank = 2),
-        TvProgram(id = 3, title = "전공의", imageRes = R.drawable.tving3, rank = 3),
-        TvProgram(id = 4, title = "이가인지명", imageRes = R.drawable.tving4, rank = 4),
-        TvProgram(id = 5, title = "내가죽기일주일전", imageRes = R.drawable.tving5, rank = 5)
-    )
 
-
-    Surface(color = Color.Black) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            item { TopBar() }
-            item {
-                LazyRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(400.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    contentPadding = PaddingValues(horizontal = 16.dp)
-                ) {
-                    items(dummyList) { program ->
-                        Image(
-                            painter = painterResource(id = program.imageRes),
-                            contentDescription = program.title,
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .fillParentMaxWidth()
-                                .clip(RoundedCornerShape(8.dp))
-                        )
-                    }
-                }
-            }
-            item {
-                Top20Section(programs = dummyList)
-            }
-            item {
-                NowBoarding(programs = dummyList)
-            }
-        }
-    }
-}

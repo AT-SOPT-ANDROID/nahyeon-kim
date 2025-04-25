@@ -76,7 +76,7 @@ fun AppNavGraph(navController: NavHostController) {
 
             composable("my") {
                 MyScreen(
-                    userId = "사용자",
+                    userId = authViewModel.registeredId.value,
                     onLogout = {
                         navController.navigate("signIn") {
                             popUpTo("my") { inclusive = true }
@@ -85,7 +85,15 @@ fun AppNavGraph(navController: NavHostController) {
                 )
             }
 
-            composable(BottomNavItem.Home.route) { HomeScreen() }
+
+            composable(BottomNavItem.Home.route) {
+                HomeScreen(
+                    navController = navController,
+                    authViewModel = authViewModel
+                )
+            }
+
+
             composable(BottomNavItem.Shorts.route) { ShortsScreen() }
             composable(BottomNavItem.Live.route) { LiveScreen() }
             composable(BottomNavItem.Search.route) { SearchScreen() }
