@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -86,7 +85,7 @@ fun BannerView(viewModel: HomeViewModel) {
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
-            .height(400.dp),
+            .height(480.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(horizontal = 16.dp)
     ) {
@@ -97,6 +96,7 @@ fun BannerView(viewModel: HomeViewModel) {
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillParentMaxWidth()
+                    .fillParentMaxHeight()
                     .clip(RoundedCornerShape(8.dp))
             )
         }
@@ -199,15 +199,19 @@ fun HomeScreen(
     viewModel: HomeViewModel = viewModel(),
     authViewModel: AuthViewModel
 ) {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        item { TopBar(navController, authViewModel) }
-        item { Spacer(modifier = Modifier.height(16.dp)) }
-        item { BannerView(viewModel) }
-        item { Top20Section(programs = viewModel.top20List) }
-        item { NowBoarding(programs = viewModel.nowList) }
+    androidx.compose.material3.Scaffold(
+        topBar = { TopBar(navController, authViewModel) }, containerColor = Color.Black
+    ) { innerPadding ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            item { BannerView(viewModel) }
+            item { Top20Section(programs = viewModel.top20List) }
+            item { NowBoarding(programs = viewModel.nowList) }
+        }
     }
 }
-
 

@@ -67,7 +67,7 @@ fun BottomNavBar(navController: NavController) {
                 }
             }, colors = NavigationBarItemDefaults.colors(
                 indicatorColor = Color.Black
-            ), interactionSource = remember { MutableInteractionSource() }, // 👈 ripple 제거용
+            ), interactionSource = remember { MutableInteractionSource() },
                 alwaysShowLabel = true
             )
         }
