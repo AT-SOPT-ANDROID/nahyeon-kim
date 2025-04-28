@@ -23,4 +23,10 @@ class HomeViewModel : ViewModel() {
     }
 
     val nowList: List<TvProgram> = _bannerList
+
+    val entertainmentList: List<TvProgram> = _bannerList.shuffled()
+    val movieList: List<TvProgram> = _bannerList.shuffled()
+    val sportsList: List<TvProgram> = _bannerList.shuffled()
+    val animeList: List<TvProgram> = _bannerList.shuffled()
+    val newsList: List<TvProgram> = _bannerList.shuffled()
 }

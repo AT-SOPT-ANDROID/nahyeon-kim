@@ -1,5 +1,6 @@
 package org.sopt.at.screen
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,8 +21,16 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,11 +41,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import org.sopt.at.R
+import org.sopt.at.component.NoRippleInteractionSource
 import org.sopt.at.data.TvProgram
 import org.sopt.at.viewmodel.AuthViewModel
 import org.sopt.at.viewmodel.HomeViewModel
@@ -193,14 +206,21 @@ fun NowBoarding(programs: List<TvProgram>) {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(
     navController: NavHostController,
     viewModel: HomeViewModel = viewModel(),
     authViewModel: AuthViewModel
 ) {
-    androidx.compose.material3.Scaffold(
-        topBar = { TopBar(navController, authViewModel) }, containerColor = Color.Black
+    val tabTitles = listOf("드라마", "예능", "영화", "스포츠", "애니", "뉴스")
+    var selectedTabIndex by remember { mutableIntStateOf(0) }
+
+
+
+    Scaffold(
+        topBar = { TopBar(navController, authViewModel) },
+        containerColor = Color.Black
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier
@@ -208,10 +228,97 @@ fun HomeScreen(
                 .padding(innerPadding),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+
+            stickyHeader {
+                TabRow(
+                    selectedTabIndex = selectedTabIndex,
+                    containerColor = Color.Black,
+                    contentColor = Color.White,
+                    indicator = {},
+                    divider = {}
+                ) {
+                    tabTitles.forEachIndexed { index, title ->
+                        Tab(
+                            selected = selectedTabIndex == index,
+                            onClick = { selectedTabIndex = index },
+                            selectedContentColor = Color.White,
+                            unselectedContentColor = Color.Gray,
+                            interactionSource = NoRippleInteractionSource,
+                            text = {
+                                Text(
+                                    text = title,
+                                    fontSize = 12.sp,
+                                    color = if (selectedTabIndex == index) Color.White else Color.Gray
+                                )
+                            }
+                        )
+                    }
+                }
+            }
+
             item { BannerView(viewModel) }
-            item { Top20Section(programs = viewModel.top20List) }
-            item { NowBoarding(programs = viewModel.nowList) }
+
+            when (selectedTabIndex) {
+                0 -> { // 드라마
+                    item { Top20Section(programs = viewModel.top20List) }
+                    item { NowBoarding(programs = viewModel.nowList) }
+                }
+                1 -> { // 예능
+                    items(viewModel.entertainmentList) { program ->
+                        ProgramItem(program)
+                    }
+                }
+                2 -> { // 영화
+                    items(viewModel.movieList) { program ->
+                        ProgramItem(program)
+                    }
+                }
+                3 -> { // 스포츠
+                    items(viewModel.sportsList) { program ->
+                        ProgramItem(program)
+                    }
+                }
+                4 -> { // 애니
+                    items(viewModel.animeList) { program ->
+                        ProgramItem(program)
+                    }
+                }
+                5 -> { // 뉴스
+                    items(viewModel.newsList) { program ->
+                        ProgramItem(program)
+                    }
+                }
+            }
+
+
         }
     }
 }
+
+
+@Composable
+fun ProgramItem(program: TvProgram) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Image(
+            painter = painterResource(id = program.imageRes),
+            contentDescription = program.title,
+            modifier = Modifier
+                .size(100.dp)
+                .clip(RoundedCornerShape(8.dp)),
+            contentScale = ContentScale.Crop
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+        Text(
+            text = program.title,
+            color = Color.White,
+            style = MaterialTheme.typography.titleMedium
+        )
+    }
+}
+
 
