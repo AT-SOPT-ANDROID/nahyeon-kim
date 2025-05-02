@@ -1,10 +1,6 @@
 package org.sopt.at.screen
 
-import android.content.Intent
-import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -32,26 +28,10 @@ import org.sopt.at.component.BackButton
 import org.sopt.at.component.CommonTextField
 import org.sopt.at.component.NoRippleInteractionSource
 import org.sopt.at.component.PasswordTextField
-
-class SignUpActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            val context = this
-            SignUpScreen(
-                onSignUpSuccess = {
-                    val intent = Intent(context, SignInActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                    }
-                    context.startActivity(intent)
-                })
-        }
-    }
-}
-
+import org.sopt.at.viewmodel.AuthViewModel
 
 @Composable
-fun SignUpScreen(onSignUpSuccess: () -> Unit) {
+fun SignUpScreen(onSignUpSuccess: () -> Unit, authViewModel: AuthViewModel) {
     var step by remember { mutableStateOf(1) }
     var id by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -95,7 +75,7 @@ fun SignUpScreen(onSignUpSuccess: () -> Unit) {
 
             OutlinedButton(
                 onClick = {
-                    if (id.matches(Regex("^[a-z0-9]{6,12}$"))) {
+                    if (authViewModel.isValidId(id)) {
                         step = 2
                     } else {
                         Toast.makeText(context, "아이디 형식을 확인해주세요.", Toast.LENGTH_SHORT).show()
@@ -139,11 +119,11 @@ fun SignUpScreen(onSignUpSuccess: () -> Unit) {
 
             OutlinedButton(
                 onClick = {
-                    if (password.matches(Regex("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[~!@#\$%^&*])[A-Za-z\\d~!@#\$%^&*]{8,15}\$"))) {
-                        registeredId = id
-                        registeredPassword = password
-                        Toast.makeText(context, "회원가입 성공!", Toast.LENGTH_SHORT).show()
-                        onSignUpSuccess()
+                    if (authViewModel.isValidPassword(password)) {
+                        if (authViewModel.registerUser(id, password)) {
+                            Toast.makeText(context, "회원가입 성공!", Toast.LENGTH_SHORT).show()
+                            onSignUpSuccess()
+                        }
                     } else {
                         Toast.makeText(context, "비밀번호 형식을 확인해주세요.", Toast.LENGTH_SHORT).show()
                     }
@@ -160,6 +140,7 @@ fun SignUpScreen(onSignUpSuccess: () -> Unit) {
             ) {
                 Text("완료", color = Color.LightGray)
             }
+
         }
     }
 }
