@@ -117,7 +117,10 @@ fun BannerView(viewModel: HomeViewModel) {
 }
 
 @Composable
-fun Top20Section(programs: List<TvProgram>) {
+fun Top20Section(
+    programs: List<TvProgram>,
+    content: @Composable () -> Unit
+) {
     Column(
         modifier = Modifier.padding(start = 16.dp)
     ) {
@@ -165,6 +168,8 @@ fun Top20Section(programs: List<TvProgram>) {
                 }
             }
         }
+
+        content()
     }
 }
 
@@ -209,83 +214,85 @@ fun NowBoarding(programs: List<TvProgram>) {
 @Composable
 fun HomeScreen(
     navController: NavHostController,
+    authViewModel: AuthViewModel = viewModel(),
     viewModel: HomeViewModel = viewModel()
 ) {
     val tabTitles = listOf("드라마", "예능", "영화", "스포츠", "애니", "뉴스")
     var selectedTabIndex by remember { mutableIntStateOf(0) }
 
-    Scaffold(
-        topBar = { TopBar(navController) },
-        containerColor = Color.Black
-    ) { innerPadding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            stickyHeader {
-                TabRow(
-                    selectedTabIndex = selectedTabIndex,
-                    containerColor = Color.Black,
-                    contentColor = Color.White,
-                    indicator = {},
-                    divider = {}
-                ) {
-                    tabTitles.forEachIndexed { index, title ->
-                        Tab(
-                            selected = selectedTabIndex == index,
-                            onClick = { selectedTabIndex = index },
-                            selectedContentColor = Color.White,
-                            unselectedContentColor = Color.Gray,
-                            text = {
-                                Text(
-                                    text = title,
-                                    fontSize = 12.sp,
-                                    color = if (selectedTabIndex == index) Color.White else Color.Gray
-                                )
-                            }
-                        )
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        item { TopBar(navController) }
+
+        stickyHeader {
+            TabRow(
+                selectedTabIndex = selectedTabIndex,
+                containerColor = Color.Black,
+                contentColor = Color.White,
+                indicator = {},
+                divider = {}
+            ) {
+                tabTitles.forEachIndexed { index, title ->
+                    Tab(
+                        selected = selectedTabIndex == index,
+                        onClick = { selectedTabIndex = index },
+                        selectedContentColor = Color.White,
+                        unselectedContentColor = Color.Gray,
+                        text = {
+                            Text(
+                                text = title,
+                                fontSize = 10.sp,
+                                color = if (selectedTabIndex == index) Color.White else Color.Gray
+                            )
+                        }
+                    )
+                }
+            }
+        }
+
+        item { BannerView(viewModel) }
+
+        when (selectedTabIndex) {
+            0 -> { // 드라마
+                item {
+                    Top20Section(programs = viewModel.top20List) {
+                        NowBoarding(programs = viewModel.nowList)
                     }
                 }
             }
-
-            item { BannerView(viewModel) }
-
-            when (selectedTabIndex) {
-                0 -> { // 드라마
-                    item { Top20Section(programs = viewModel.top20List) }
-                    item { NowBoarding(programs = viewModel.nowList) }
+            1 -> { // 예능
+                items(viewModel.entertainmentList, key = { it.id }) { program ->
+                    ProgramItem(program)
                 }
-                1 -> { // 예능
-                    items(viewModel.entertainmentList, key = { it.id }) { program ->
-                        ProgramItem(program)
-                    }
+            }
+            2 -> { // 영화
+                items(viewModel.movieList, key = { it.id }) { program ->
+                    ProgramItem(program)
                 }
-                2 -> { // 영화
-                    items(viewModel.movieList, key = { it.id }) { program ->
-                        ProgramItem(program)
-                    }
+            }
+            3 -> { // 스포츠
+                items(viewModel.sportsList, key = { it.id }) { program ->
+                    ProgramItem(program)
                 }
-                3 -> { // 스포츠
-                    items(viewModel.sportsList, key = { it.id }) { program ->
-                        ProgramItem(program)
-                    }
+            }
+            4 -> { // 애니
+                items(viewModel.animeList, key = { it.id }) { program ->
+                    ProgramItem(program)
                 }
-                4 -> { // 애니
-                    items(viewModel.animeList, key = { it.id }) { program ->
-                        ProgramItem(program)
-                    }
-                }
-                5 -> { // 뉴스
-                    items(viewModel.newsList, key = { it.id }) { program ->
-                        ProgramItem(program)
-                    }
+            }
+            5 -> { // 뉴스
+                items(viewModel.newsList, key = { it.id }) { program ->
+                    ProgramItem(program)
                 }
             }
         }
     }
 }
+
 
 @Composable
 fun ProgramItem(program: TvProgram) {

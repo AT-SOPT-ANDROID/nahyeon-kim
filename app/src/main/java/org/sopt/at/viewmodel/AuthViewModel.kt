@@ -2,10 +2,15 @@ package org.sopt.at.viewmodel
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class AuthViewModel : ViewModel() {
 
-    var registeredId = mutableStateOf("")
+    private val _registeredId: MutableStateFlow<String> = MutableStateFlow("")
+    val registeredId: StateFlow<String> = _registeredId.asStateFlow()
+
     var registeredPassword = mutableStateOf("")
 
     fun isValidId(id: String): Boolean {
@@ -17,8 +22,8 @@ class AuthViewModel : ViewModel() {
     }
 
     fun registerUser(id: String, password: String): Boolean {
-        if (registeredId.value != id || registeredPassword.value != password) {
-            registeredId.value = id
+        if (_registeredId.value != id || registeredPassword.value != password) {
+            _registeredId.value = id
             registeredPassword.value = password
             return true
         }
