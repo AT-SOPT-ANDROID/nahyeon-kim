@@ -55,7 +55,7 @@ import org.sopt.at.viewmodel.HomeViewModel
 
 
 @Composable
-fun TopBar(navController: NavHostController, authViewModel: AuthViewModel) {
+fun TopBar(navController: NavHostController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -92,7 +92,6 @@ fun TopBar(navController: NavHostController, authViewModel: AuthViewModel) {
     }
 }
 
-
 @Composable
 fun BannerView(viewModel: HomeViewModel) {
     LazyRow(
@@ -102,7 +101,8 @@ fun BannerView(viewModel: HomeViewModel) {
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(horizontal = 16.dp)
     ) {
-        items(viewModel.bannerList) { program ->
+
+        items(viewModel.bannerList, key = { it.id }) { program ->
             Image(
                 painter = painterResource(id = program.imageRes),
                 contentDescription = program.title,
@@ -132,7 +132,8 @@ fun Top20Section(programs: List<TvProgram>) {
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(end = 16.dp)
         ) {
-            items(programs) { program ->
+
+            items(programs, key = { it.id }) { program ->
                 Box(
                     modifier = Modifier
                         .width(170.dp)
@@ -154,21 +155,18 @@ fun Top20Section(programs: List<TvProgram>) {
                         color = Color.White,
                         fontSize = 80.sp,
                         fontWeight = FontWeight.Bold,
-                        fontStyle = FontStyle.Italic,
                         style = MaterialTheme.typography.displayLarge.copy(
                             shadow = Shadow(
                                 color = Color.Black, offset = Offset(4f, 4f), blurRadius = 8f
                             )
                         ),
                         modifier = Modifier.align(Alignment.BottomStart)
-
                     )
                 }
             }
         }
     }
 }
-
 
 @Composable
 fun NowBoarding(programs: List<TvProgram>) {
@@ -186,7 +184,8 @@ fun NowBoarding(programs: List<TvProgram>) {
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(end = 16.dp)
         ) {
-            items(programs) { program ->
+
+            items(programs, key = { it.id }) { program ->
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.width(140.dp)
@@ -210,16 +209,13 @@ fun NowBoarding(programs: List<TvProgram>) {
 @Composable
 fun HomeScreen(
     navController: NavHostController,
-    viewModel: HomeViewModel = viewModel(),
-    authViewModel: AuthViewModel
+    viewModel: HomeViewModel = viewModel()
 ) {
     val tabTitles = listOf("드라마", "예능", "영화", "스포츠", "애니", "뉴스")
     var selectedTabIndex by remember { mutableIntStateOf(0) }
 
-
-
     Scaffold(
-        topBar = { TopBar(navController, authViewModel) },
+        topBar = { TopBar(navController) },
         containerColor = Color.Black
     ) { innerPadding ->
         LazyColumn(
@@ -228,7 +224,6 @@ fun HomeScreen(
                 .padding(innerPadding),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-
             stickyHeader {
                 TabRow(
                     selectedTabIndex = selectedTabIndex,
@@ -243,7 +238,6 @@ fun HomeScreen(
                             onClick = { selectedTabIndex = index },
                             selectedContentColor = Color.White,
                             unselectedContentColor = Color.Gray,
-                            interactionSource = NoRippleInteractionSource,
                             text = {
                                 Text(
                                     text = title,
@@ -264,37 +258,34 @@ fun HomeScreen(
                     item { NowBoarding(programs = viewModel.nowList) }
                 }
                 1 -> { // 예능
-                    items(viewModel.entertainmentList) { program ->
+                    items(viewModel.entertainmentList, key = { it.id }) { program ->
                         ProgramItem(program)
                     }
                 }
                 2 -> { // 영화
-                    items(viewModel.movieList) { program ->
+                    items(viewModel.movieList, key = { it.id }) { program ->
                         ProgramItem(program)
                     }
                 }
                 3 -> { // 스포츠
-                    items(viewModel.sportsList) { program ->
+                    items(viewModel.sportsList, key = { it.id }) { program ->
                         ProgramItem(program)
                     }
                 }
                 4 -> { // 애니
-                    items(viewModel.animeList) { program ->
+                    items(viewModel.animeList, key = { it.id }) { program ->
                         ProgramItem(program)
                     }
                 }
                 5 -> { // 뉴스
-                    items(viewModel.newsList) { program ->
+                    items(viewModel.newsList, key = { it.id }) { program ->
                         ProgramItem(program)
                     }
                 }
             }
-
-
         }
     }
 }
-
 
 @Composable
 fun ProgramItem(program: TvProgram) {
@@ -320,5 +311,3 @@ fun ProgramItem(program: TvProgram) {
         )
     }
 }
-
-
