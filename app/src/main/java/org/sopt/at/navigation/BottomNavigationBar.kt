@@ -28,46 +28,46 @@ sealed class BottomNavItem(val route: String, val icon: Int, val label: String) 
 
 @Composable
 fun BottomNavBar(navController: NavController) {
-    val items = listOf(
+    val items = remember { listOf(
         BottomNavItem.Home,
         BottomNavItem.Shorts,
         BottomNavItem.Live,
         BottomNavItem.Search,
         BottomNavItem.History
-    )
+    ) }
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
+    val currentRoute = remember(navBackStackEntry) { navBackStackEntry?.destination?.route }
 
-    NavigationBar(
-        containerColor = Color.Black, tonalElevation = 4.dp
-    ) {
+    NavigationBar(containerColor = Color.Black, tonalElevation = 4.dp) {
         items.forEach { item ->
             val selected = currentRoute == item.route
 
             NavigationBarItem(
-                selected = selected, onClick = {
-                if (currentRoute != item.route) {
-                    navController.navigate(item.route) {
-                        popUpTo(navController.graph.startDestinationId) { saveState = true }
-                        launchSingleTop = true
-                        restoreState = true
+                selected = selected,
+                onClick = {
+                    if (currentRoute != item.route) {
+                        navController.navigate(item.route) {
+                            popUpTo(navController.graph.startDestinationId) { saveState = true }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
                     }
-                }
-            }, icon = {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(
-                        painter = painterResource(id = item.icon),
-                        contentDescription = item.label,
-                        tint = if (selected) Color.White else Color.Gray
-                    )
-                    Text(
-                        text = item.label, color = if (selected) Color.White else Color.Gray
-                    )
-                }
-            }, colors = NavigationBarItemDefaults.colors(
-                indicatorColor = Color.Black
-            ), interactionSource = remember { MutableInteractionSource() },
+                },
+                icon = {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(
+                            painter = painterResource(id = item.icon),
+                            contentDescription = item.label,
+                            tint = if (selected) Color.White else Color.Gray
+                        )
+                        Text(
+                            text = item.label, color = if (selected) Color.White else Color.Gray
+                        )
+                    }
+                },
+                colors = NavigationBarItemDefaults.colors(indicatorColor = Color.Black),
+                interactionSource = remember { MutableInteractionSource() },
                 alwaysShowLabel = true
             )
         }

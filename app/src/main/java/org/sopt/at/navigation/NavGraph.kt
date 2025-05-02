@@ -25,23 +25,23 @@ import org.sopt.at.viewmodel.AuthViewModel
 fun AppNavGraph(navController: NavHostController) {
     val authViewModel = remember { AuthViewModel() }
 
-
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
-    val bottomNavRoutes = listOf(
+    val currentRoute = remember(navBackStackEntry) { navBackStackEntry?.destination?.route }
+    val bottomNavRoutes = remember { listOf(
         BottomNavItem.Home.route,
         BottomNavItem.Shorts.route,
         BottomNavItem.Live.route,
         BottomNavItem.Search.route,
         BottomNavItem.History.route
-    )
+    ) }
 
     Scaffold(
         bottomBar = {
             if (currentRoute in bottomNavRoutes) {
                 BottomNavBar(navController)
             }
-        }, containerColor = Color.Black
+        },
+        containerColor = Color.Black
     ) { innerPadding ->
         NavHost(
             navController = navController,
@@ -66,26 +66,25 @@ fun AppNavGraph(navController: NavHostController) {
                         navController.navigate("signIn") {
                             popUpTo("signUp") { inclusive = true }
                         }
-                    }, authViewModel = authViewModel
+                    },
+                    authViewModel = authViewModel
                 )
             }
 
             composable("my") {
                 MyScreen(
-                    userId = authViewModel.registeredId.value, onLogout = {
+                    userId = authViewModel.registeredId.value,
+                    onLogout = {
                         navController.navigate("signIn") {
                             popUpTo("my") { inclusive = true }
                         }
-                    })
-            }
-
-
-            composable(BottomNavItem.Home.route) {
-                HomeScreen(
-                    navController = navController, authViewModel = authViewModel
+                    }
                 )
             }
 
+            composable(BottomNavItem.Home.route) {
+                HomeScreen(navController = navController)
+            }
 
             composable(BottomNavItem.Shorts.route) { ShortsScreen() }
             composable(BottomNavItem.Live.route) { LiveScreen() }
