@@ -1,10 +1,7 @@
 package org.sopt.at.viewmodel
 
-import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
-import org.sopt.at.screen.SignUpScreen
 
 class AuthViewModel : ViewModel() {
 
@@ -20,8 +17,11 @@ class AuthViewModel : ViewModel() {
     }
 
     fun registerUser(id: String, password: String): Boolean {
-        registeredId.value = id
-        registeredPassword.value = password
-        return true
+        if (registeredId.value != id || registeredPassword.value != password) {
+            registeredId.value = id
+            registeredPassword.value = password
+            return true
+        }
+        return false
     }
 }
