@@ -2,14 +2,7 @@ package org.sopt.at.screen
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
@@ -18,12 +11,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -44,7 +32,9 @@ import org.sopt.at.viewmodel.AuthViewModel
 
 @Composable
 fun SignInScreen(
-    onSignUpClick: () -> Unit, onLoginSuccess: () -> Unit, authViewModel: AuthViewModel
+    onSignUpClick: () -> Unit,
+    onLoginSuccess: () -> Unit,
+    authViewModel: AuthViewModel
 ) {
     var id by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -52,9 +42,37 @@ fun SignInScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
+    LaunchedEffect(snackbarHostState) {
+        if (id.isNotBlank() && password.isNotBlank()) {
+            if (id != authViewModel.registeredId.value || password != authViewModel.registeredPassword.value) {
+                snackbarHostState.showSnackbar("ID 또는 비밀번호가 일치하지 않습니다.")
+            }
+        }
+    }
+
+    val onLoginClicked = remember(id, password) {
+        {
+            if (id.isNotBlank() && password.isNotBlank()) {
+                if (id == authViewModel.registeredId.value && password == authViewModel.registeredPassword.value) {
+                    onLoginSuccess()
+                } else {
+                    scope.launch {
+                        snackbarHostState.showSnackbar("ID 또는 비밀번호가 일치하지 않습니다.")
+                    }
+                }
+            } else {
+                scope.launch {
+                    snackbarHostState.showSnackbar("아이디와 비밀번호를 입력해 주세요.")
+                }
+            }
+        }
+    }
+
     Scaffold(
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }, containerColor = Color.Black
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        containerColor = Color.Black
     ) { paddingValues ->
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -90,22 +108,7 @@ fun SignInScreen(
             Spacer(Modifier.height(24.dp))
 
             OutlinedButton(
-                onClick = {
-                    if (id.isNotBlank() && password.isNotBlank()) {
-
-                        if (id == authViewModel.registeredId.value && password == authViewModel.registeredPassword.value) {
-                            onLoginSuccess()
-                        } else {
-                            scope.launch {
-                                snackbarHostState.showSnackbar("ID 또는 비밀번호가 일치하지 않습니다.")
-                            }
-                        }
-                    } else {
-                        scope.launch {
-                            snackbarHostState.showSnackbar("아이디와 비밀번호를 입력해 주세요.")
-                        }
-                    }
-                },
+                onClick = { onLoginClicked() },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(0.dp),
                 colors = ButtonDefaults.outlinedButtonColors(
@@ -116,7 +119,6 @@ fun SignInScreen(
             ) {
                 Text("로그인하기")
             }
-
 
             Spacer(Modifier.height(16.dp))
 
@@ -149,6 +151,7 @@ fun SignInScreen(
                         onSignUpClick()
                     })
             }
+
             Spacer(Modifier.height(16.dp))
 
             Text(
