@@ -42,50 +42,45 @@ import org.sopt.at.viewmodel.AuthViewModel
 
 @Composable
 fun SignInScreen(
-    onSignUpClick: () -> Unit, onLoginSuccess: () -> Unit, authViewModel: AuthViewModel
+    onSignUpClick: () -> Unit,
+    onLoginSuccess: () -> Unit,
+    authViewModel: AuthViewModel
 ) {
     var id by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
     val isInputValid = id.isNotBlank() && password.isNotBlank()
-    val onLoginClicked = remember(id, password) {
-        {
-            when {
-                id.isBlank() || password.isBlank() -> {
-                    scope.launch {
-                        snackbarHostState.showSnackbar("아이디와 비밀번호를 입력해 주세요.")
-                    }
+    fun handleLogin() {
+        when {
+            id.isBlank() || password.isBlank() -> {
+                scope.launch {
+                    snackbarHostState.showSnackbar("아이디와 비밀번호를 입력해 주세요.")
                 }
-
-                id != authViewModel.registeredId.value || password != authViewModel.registeredPassword.value -> {
-                    scope.launch {
-                        snackbarHostState.showSnackbar("ID 또는 비밀번호가 일치하지 않습니다.")
-                    }
-                }
-
-                else -> onLoginSuccess()
             }
+
+            id != authViewModel.registeredId.value || password != authViewModel.registeredPassword.value -> {
+                scope.launch {
+                    snackbarHostState.showSnackbar("ID 또는 비밀번호가 일치하지 않습니다.")
+                }
+            }
+
+            else -> onLoginSuccess()
         }
     }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         containerColor = TivingTheme.colors.basicBlack
     ) { paddingValues ->
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(24.dp)
                 .padding(paddingValues)
         ) {
-
-            BackButton(
-                modifier = Modifier.align(Alignment.Start)
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
+            BackButton(modifier = Modifier.align(Alignment.Start))
+            Spacer(Modifier.height(32.dp))
 
             Text(
                 text = "TVING ID 로그인",
@@ -95,35 +90,30 @@ fun SignInScreen(
             )
 
             CommonTextField(
-                value = id, onValueChange = { id = it }, modifier = Modifier.fillMaxWidth()
+                value = id,
+                onValueChange = { id = it },
+                modifier = Modifier.fillMaxWidth()
             )
-
             Spacer(Modifier.height(12.dp))
-
             PasswordTextField(
                 value = password,
                 onValueChange = { password = it },
                 modifier = Modifier.fillMaxWidth()
             )
-
             Spacer(Modifier.height(24.dp))
 
             OutlinedButton(
-                onClick = { onLoginClicked() },
+                onClick = { handleLogin() },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(0.dp),
                 colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = if (isInputValid) TivingTheme.colors.brandRed
-                    else TivingTheme.colors.gray03, contentColor = TivingTheme.colors.basicWhite
+                    containerColor = if (isInputValid) TivingTheme.colors.brandRed else TivingTheme.colors.gray03,
+                    contentColor = TivingTheme.colors.basicWhite
                 ),
                 border = BorderStroke(1.dp, TivingTheme.colors.gray04),
                 interactionSource = NoRippleInteractionSource
             ) {
-                Text(
-                    text = "로그인하기",
-                    style = TivingTheme.typography.button,
-                    color = TivingTheme.colors.basicWhite
-                )
+                Text("로그인하기", style = TivingTheme.typography.button)
             }
 
             Spacer(Modifier.height(16.dp))
@@ -136,57 +126,47 @@ fun SignInScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "아이디 찾기",
+                    "아이디 찾기",
                     color = TivingTheme.colors.gray02,
                     style = TivingTheme.typography.body
                 )
-
                 VerticalDivider(
                     modifier = Modifier.height(22.dp),
                     color = TivingTheme.colors.gray04,
                     thickness = 1.5.dp
                 )
-
                 Text(
-                    text = "비밀번호 찾기",
+                    "비밀번호 찾기",
                     color = TivingTheme.colors.gray02,
                     style = TivingTheme.typography.body
                 )
-
                 VerticalDivider(
                     modifier = Modifier.height(22.dp),
                     color = TivingTheme.colors.gray04,
                     thickness = 1.5.dp
                 )
-
                 Text(
                     text = "회원가입",
                     color = TivingTheme.colors.gray02,
                     style = TivingTheme.typography.body,
                     modifier = Modifier.clickable(
                         interactionSource = NoRippleInteractionSource, indication = null
-                    ) {
-                        onSignUpClick()
-                    })
+                    ) { onSignUpClick() }
+                )
             }
 
             Spacer(Modifier.height(16.dp))
 
             Text(
-                text = buildAnnotatedString {
-                    append("이 사이트는 Google reCAPTCHA로 보호되며,\n")
-                    append("Google ")
-
+                buildAnnotatedString {
+                    append("이 사이트는 Google reCAPTCHA로 보호되며,\nGoogle ")
                     withStyle(style = SpanStyle(textDecoration = TextDecoration.Underline)) {
                         append("개인정보 처리방침")
                     }
-
                     append("과 ")
-
                     withStyle(style = SpanStyle(textDecoration = TextDecoration.Underline)) {
                         append("서비스 약관")
                     }
-
                     append("이 적용됩니다.")
                 },
                 color = TivingTheme.colors.gray04,

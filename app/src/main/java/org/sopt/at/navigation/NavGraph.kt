@@ -12,14 +12,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import org.sopt.at.screen.MyScreen
-import org.sopt.at.screen.HistoryScreen
-import org.sopt.at.screen.HomeScreen
-import org.sopt.at.screen.LiveScreen
-import org.sopt.at.screen.SearchScreen
-import org.sopt.at.screen.ShortsScreen
-import org.sopt.at.screen.SignInScreen
-import org.sopt.at.screen.SignUpScreen
+import org.sopt.at.screen.*
+
 import org.sopt.at.viewmodel.AuthViewModel
 
 @Composable
@@ -28,13 +22,15 @@ fun AppNavGraph(navController: NavHostController) {
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = remember(navBackStackEntry) { navBackStackEntry?.destination?.route }
-    val bottomNavRoutes = remember { listOf(
-        BottomNavItem.Home.route,
-        BottomNavItem.Shorts.route,
-        BottomNavItem.Live.route,
-        BottomNavItem.Search.route,
-        BottomNavItem.History.route
-    ) }
+    val bottomNavRoutes = remember {
+        listOf(
+            BottomNavItem.Home.route,
+            BottomNavItem.Shorts.route,
+            BottomNavItem.Live.route,
+            BottomNavItem.Search.route,
+            BottomNavItem.History.route
+        )
+    }
 
     Scaffold(
         bottomBar = {
@@ -46,45 +42,44 @@ fun AppNavGraph(navController: NavHostController) {
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = "signIn",
+            startDestination = NavRoute.SignIn,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable("signIn") {
+            composable(NavRoute.SignIn) {
                 SignInScreen(
-                    onSignUpClick = { navController.navigate("signUp") },
+                    onSignUpClick = { navController.navigate(NavRoute.SignUp) },
                     onLoginSuccess = {
-                        navController.navigate("home") {
-                            popUpTo("signIn") { inclusive = true }
+                        navController.navigate(BottomNavItem.Home.route) {
+                            popUpTo(NavRoute.SignIn) { inclusive = true }
                         }
                     },
                     authViewModel = authViewModel
                 )
             }
 
-            composable("signUp") {
+            composable(NavRoute.SignUp) {
                 SignUpScreen(
                     onSignUpSuccess = {
-                        navController.navigate("signIn") {
-                            popUpTo("signUp") { inclusive = true }
+                        navController.navigate(NavRoute.SignIn) {
+                            popUpTo(NavRoute.SignUp) { inclusive = true }
                         }
                     },
                     authViewModel = authViewModel
                 )
             }
 
-            composable("my") {
+            composable(NavRoute.My) {
                 val registeredId by authViewModel.registeredId.collectAsState()
 
                 MyScreen(
                     userId = registeredId,
                     onLogout = {
-                        navController.navigate("signIn") {
-                            popUpTo("my") { inclusive = true }
+                        navController.navigate(NavRoute.SignIn) {
+                            popUpTo(NavRoute.My) { inclusive = true }
                         }
                     }
                 )
             }
-
 
             composable(BottomNavItem.Home.route) {
                 HomeScreen(navController = navController)
