@@ -26,34 +26,52 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 import org.sopt.at.component.BackButton
 import org.sopt.at.component.CommonTextField
 import org.sopt.at.component.NoRippleInteractionSource
 import org.sopt.at.component.PasswordTextField
+import org.sopt.at.ui.theme.TivingTheme
 import org.sopt.at.viewmodel.AuthViewModel
 
 @Composable
 fun SignInScreen(
-    onSignUpClick: () -> Unit, onLoginSuccess: () -> Unit, authViewModel: AuthViewModel
+    onSignUpClick: () -> Unit,
+    onLoginSuccess: () -> Unit,
+    authViewModel: AuthViewModel
 ) {
     var id by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
-    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val isInputValid = id.isNotBlank() && password.isNotBlank()
+    fun handleLogin() {
+        when {
+            id.isBlank() || password.isBlank() -> {
+                scope.launch {
+                    snackbarHostState.showSnackbar("아이디와 비밀번호를 입력해 주세요.")
+                }
+            }
+
+            id != authViewModel.registeredId.value || password != authViewModel.registeredPassword.value -> {
+                scope.launch {
+                    snackbarHostState.showSnackbar("ID 또는 비밀번호가 일치하지 않습니다.")
+                }
+            }
+
+            else -> onLoginSuccess()
+        }
+    }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }, containerColor = Color.Black
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        containerColor = TivingTheme.colors.basicBlack
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -61,62 +79,42 @@ fun SignInScreen(
                 .padding(24.dp)
                 .padding(paddingValues)
         ) {
-
-            BackButton(
-                modifier = Modifier.align(Alignment.Start)
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
+            BackButton(modifier = Modifier.align(Alignment.Start))
+            Spacer(Modifier.height(32.dp))
 
             Text(
                 text = "TVING ID 로그인",
-                fontSize = 24.sp,
-                color = Color.White,
+                style = TivingTheme.typography.title,
+                color = TivingTheme.colors.basicWhite,
                 modifier = Modifier.padding(vertical = 20.dp)
             )
 
             CommonTextField(
-                value = id, onValueChange = { id = it }, modifier = Modifier.fillMaxWidth()
+                value = id,
+                onValueChange = { id = it },
+                modifier = Modifier.fillMaxWidth()
             )
-
             Spacer(Modifier.height(12.dp))
-
             PasswordTextField(
                 value = password,
                 onValueChange = { password = it },
                 modifier = Modifier.fillMaxWidth()
             )
-
             Spacer(Modifier.height(24.dp))
 
             OutlinedButton(
-                onClick = {
-                    if (id.isNotBlank() && password.isNotBlank()) {
-
-                        if (id == authViewModel.registeredId.value && password == authViewModel.registeredPassword.value) {
-                            onLoginSuccess()
-                        } else {
-                            scope.launch {
-                                snackbarHostState.showSnackbar("ID 또는 비밀번호가 일치하지 않습니다.")
-                            }
-                        }
-                    } else {
-                        scope.launch {
-                            snackbarHostState.showSnackbar("아이디와 비밀번호를 입력해 주세요.")
-                        }
-                    }
-                },
+                onClick = { handleLogin() },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(0.dp),
                 colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = Color.LightGray, contentColor = Color.Black
+                    containerColor = if (isInputValid) TivingTheme.colors.brandRed else TivingTheme.colors.gray03,
+                    contentColor = TivingTheme.colors.basicWhite
                 ),
-                border = BorderStroke(1.dp, Color.DarkGray),
+                border = BorderStroke(1.dp, TivingTheme.colors.gray04),
                 interactionSource = NoRippleInteractionSource
             ) {
-                Text("로그인하기")
+                Text("로그인하기", style = TivingTheme.typography.button)
             }
-
 
             Spacer(Modifier.height(16.dp))
 
@@ -127,50 +125,54 @@ fun SignInScreen(
                 horizontalArrangement = Arrangement.SpaceAround,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("아이디 찾기", color = Color.LightGray, fontSize = 16.sp)
-
-                VerticalDivider(
-                    modifier = Modifier.height(22.dp), color = Color.DarkGray, thickness = 1.5.dp
+                Text(
+                    "아이디 찾기",
+                    color = TivingTheme.colors.gray02,
+                    style = TivingTheme.typography.body
                 )
-
-                Text("비밀번호 찾기", color = Color.LightGray, fontSize = 16.sp)
-
                 VerticalDivider(
-                    modifier = Modifier.height(22.dp), color = Color.DarkGray, thickness = 1.5.dp
+                    modifier = Modifier.height(22.dp),
+                    color = TivingTheme.colors.gray04,
+                    thickness = 1.5.dp
                 )
-
+                Text(
+                    "비밀번호 찾기",
+                    color = TivingTheme.colors.gray02,
+                    style = TivingTheme.typography.body
+                )
+                VerticalDivider(
+                    modifier = Modifier.height(22.dp),
+                    color = TivingTheme.colors.gray04,
+                    thickness = 1.5.dp
+                )
                 Text(
                     text = "회원가입",
-                    color = Color.LightGray,
-                    fontSize = 16.sp,
+                    color = TivingTheme.colors.gray02,
+                    style = TivingTheme.typography.body,
                     modifier = Modifier.clickable(
                         interactionSource = NoRippleInteractionSource, indication = null
-                    ) {
-                        onSignUpClick()
-                    })
+                    ) { onSignUpClick() }
+                )
             }
+
             Spacer(Modifier.height(16.dp))
 
             Text(
-                text = buildAnnotatedString {
-                    append("이 사이트는 Google reCAPTCHA로 보호되며,\n")
-                    append("Google ")
-
+                buildAnnotatedString {
+                    append("이 사이트는 Google reCAPTCHA로 보호되며,\nGoogle ")
                     withStyle(style = SpanStyle(textDecoration = TextDecoration.Underline)) {
                         append("개인정보 처리방침")
                     }
-
                     append("과 ")
-
                     withStyle(style = SpanStyle(textDecoration = TextDecoration.Underline)) {
                         append("서비스 약관")
                     }
-
                     append("이 적용됩니다.")
                 },
-                color = Color.DarkGray,
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                textAlign = TextAlign.Center
+                color = TivingTheme.colors.gray04,
+                textAlign = TextAlign.Center,
+                style = TivingTheme.typography.caption,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
             )
         }
     }

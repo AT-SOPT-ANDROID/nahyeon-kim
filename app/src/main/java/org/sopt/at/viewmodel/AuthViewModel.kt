@@ -1,14 +1,16 @@
 package org.sopt.at.viewmodel
 
-import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
-import org.sopt.at.screen.SignUpScreen
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class AuthViewModel : ViewModel() {
 
-    var registeredId = mutableStateOf("")
+    private val _registeredId: MutableStateFlow<String> = MutableStateFlow("")
+    val registeredId: StateFlow<String> = _registeredId.asStateFlow()
+
     var registeredPassword = mutableStateOf("")
 
     fun isValidId(id: String): Boolean {
@@ -20,8 +22,11 @@ class AuthViewModel : ViewModel() {
     }
 
     fun registerUser(id: String, password: String): Boolean {
-        registeredId.value = id
-        registeredPassword.value = password
-        return true
+        if (_registeredId.value != id || registeredPassword.value != password) {
+            _registeredId.value = id
+            registeredPassword.value = password
+            return true
+        }
+        return false
     }
 }

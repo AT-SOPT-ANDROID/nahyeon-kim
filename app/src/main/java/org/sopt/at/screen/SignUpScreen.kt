@@ -20,14 +20,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import org.sopt.at.component.BackButton
 import org.sopt.at.component.CommonTextField
 import org.sopt.at.component.NoRippleInteractionSource
 import org.sopt.at.component.PasswordTextField
+import org.sopt.at.ui.theme.TivingTheme
 import org.sopt.at.viewmodel.AuthViewModel
 
 @Composable
@@ -40,22 +39,21 @@ fun SignUpScreen(onSignUpSuccess: () -> Unit, authViewModel: AuthViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(TivingTheme.colors.basicBlack)
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        BackButton(modifier = Modifier.align(Alignment.Start))
+        Spacer(modifier = Modifier.height(32.dp))
 
-        BackButton(
-            modifier = Modifier.align(Alignment.Start)
+        Text(
+            text = if (step == 1) "아이디를 입력해주세요." else "비밀번호를 입력해주세요.",
+            color = TivingTheme.colors.basicWhite,
+            style = TivingTheme.typography.title,
+            modifier = Modifier.padding(vertical = 20.dp)
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
-
         if (step == 1) {
-            Text("아이디를 입력해주세요.", fontSize = 20.sp, color = Color.White)
-
-            Spacer(Modifier.height(20.dp))
-
             Column(modifier = Modifier.fillMaxWidth()) {
                 CommonTextField(
                     value = id, onValueChange = { id = it }, modifier = Modifier.fillMaxWidth()
@@ -64,15 +62,16 @@ fun SignUpScreen(onSignUpSuccess: () -> Unit, authViewModel: AuthViewModel) {
                 Spacer(Modifier.height(8.dp))
 
                 Text(
-                    "영문 소문자 또는 영문 소문자, 숫자 조합 6~12 자리",
-                    color = Color.LightGray,
-                    fontSize = 12.sp,
+                    text = "영문 소문자 또는 영문 소문자+숫자 조합 6~12 자리",
+                    color = TivingTheme.colors.gray02,
+                    style = TivingTheme.typography.caption,
                     modifier = Modifier.padding(start = 5.dp)
                 )
             }
 
             Spacer(modifier = Modifier.weight(1f))
 
+            val isIdNotBlank = id.isNotBlank()
             OutlinedButton(
                 onClick = {
                     if (authViewModel.isValidId(id)) {
@@ -86,18 +85,19 @@ fun SignUpScreen(onSignUpSuccess: () -> Unit, authViewModel: AuthViewModel) {
                     .padding(bottom = 12.dp),
                 shape = RoundedCornerShape(0.dp),
                 colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = Color.Black, contentColor = Color.White
+                    containerColor = if (isIdNotBlank) TivingTheme.colors.brandRed else TivingTheme.colors.gray03,
+                    contentColor = TivingTheme.colors.basicWhite
                 ),
-                border = BorderStroke(1.dp, Color.DarkGray),
+                border = BorderStroke(1.dp, TivingTheme.colors.gray04),
                 interactionSource = NoRippleInteractionSource
             ) {
-                Text("다음", color = Color.LightGray)
+                Text(
+                    text = "다음",
+                    style = TivingTheme.typography.button,
+                    color = TivingTheme.colors.basicWhite
+                )
             }
         } else {
-            Text("비밀번호를 입력해주세요.", fontSize = 20.sp, color = Color.White)
-
-            Spacer(Modifier.height(20.dp))
-
             Column(modifier = Modifier.fillMaxWidth()) {
                 PasswordTextField(
                     value = password,
@@ -108,15 +108,16 @@ fun SignUpScreen(onSignUpSuccess: () -> Unit, authViewModel: AuthViewModel) {
                 Spacer(Modifier.height(8.dp))
 
                 Text(
-                    "영문, 숫자, 특수문자(~!@#\$%^&*) 조합 8~15자리",
-                    color = Color.LightGray,
-                    fontSize = 12.sp,
+                    text = "영문, 숫자, 특수문자(~!@#\$%^&*) 조합 8~15자리",
+                    color = TivingTheme.colors.gray02,
+                    style = TivingTheme.typography.caption,
                     modifier = Modifier.padding(start = 5.dp)
                 )
             }
 
             Spacer(modifier = Modifier.weight(1f))
 
+            val isPasswordNotBlank = password.isNotBlank()
             OutlinedButton(
                 onClick = {
                     if (authViewModel.isValidPassword(password)) {
@@ -133,14 +134,18 @@ fun SignUpScreen(onSignUpSuccess: () -> Unit, authViewModel: AuthViewModel) {
                     .padding(bottom = 12.dp),
                 shape = RoundedCornerShape(0.dp),
                 colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = Color.Black, contentColor = Color.White
+                    containerColor = if (isPasswordNotBlank) TivingTheme.colors.brandRed else TivingTheme.colors.gray03,
+                    contentColor = TivingTheme.colors.basicWhite
                 ),
-                border = BorderStroke(1.dp, Color.DarkGray),
+                border = BorderStroke(1.dp, TivingTheme.colors.gray04),
                 interactionSource = NoRippleInteractionSource
             ) {
-                Text("완료", color = Color.LightGray)
+                Text(
+                    text = "완료",
+                    style = TivingTheme.typography.button,
+                    color = TivingTheme.colors.basicWhite
+                )
             }
-
         }
     }
 }

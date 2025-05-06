@@ -18,56 +18,66 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import org.sopt.at.R
 
-sealed class BottomNavItem(val route: String, val icon: Int, val label: String) {
+sealed class BottomNavItem(
+    val route: String,
+    val iconRes: Int,
+    val label: String
+) {
+    @Composable
+    fun painter() = painterResource(id = iconRes)
+
     object Home : BottomNavItem("home", R.drawable.ic_home, "HOME")
-    object Shorts : BottomNavItem("shorts", R.drawable.ic_shorts, "Shorts")
+    object Shorts : BottomNavItem("shorts", R.drawable.ic_shorts, "SHORTS")
     object Live : BottomNavItem("live", R.drawable.ic_live, "LIVE")
-    object Search : BottomNavItem("search", R.drawable.ic_search, "Search")
+    object Search : BottomNavItem("search", R.drawable.ic_search, "SEARCH")
     object History : BottomNavItem("history", R.drawable.ic_history, "HISTORY")
 }
 
 @Composable
 fun BottomNavBar(navController: NavController) {
-    val items = listOf(
-        BottomNavItem.Home,
-        BottomNavItem.Shorts,
-        BottomNavItem.Live,
-        BottomNavItem.Search,
-        BottomNavItem.History
-    )
+    val items = remember {
+        listOf(
+            BottomNavItem.Home,
+            BottomNavItem.Shorts,
+            BottomNavItem.Live,
+            BottomNavItem.Search,
+            BottomNavItem.History
+        )
+    }
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    NavigationBar(
-        containerColor = Color.Black, tonalElevation = 4.dp
-    ) {
+    NavigationBar(containerColor = Color.Black, tonalElevation = 4.dp) {
         items.forEach { item ->
             val selected = currentRoute == item.route
 
             NavigationBarItem(
-                selected = selected, onClick = {
-                if (currentRoute != item.route) {
-                    navController.navigate(item.route) {
-                        popUpTo(navController.graph.startDestinationId) { saveState = true }
-                        launchSingleTop = true
-                        restoreState = true
+                selected = selected,
+                onClick = {
+                    if (currentRoute != item.route) {
+                        navController.navigate(item.route) {
+                            popUpTo(navController.graph.startDestinationId) { saveState = true }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
                     }
-                }
-            }, icon = {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(
-                        painter = painterResource(id = item.icon),
-                        contentDescription = item.label,
-                        tint = if (selected) Color.White else Color.Gray
-                    )
-                    Text(
-                        text = item.label, color = if (selected) Color.White else Color.Gray
-                    )
-                }
-            }, colors = NavigationBarItemDefaults.colors(
-                indicatorColor = Color.Black
-            ), interactionSource = remember { MutableInteractionSource() },
+                },
+                icon = {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(
+                            painter = item.painter(),
+                            contentDescription = item.label,
+                            tint = if (selected) Color.White else Color.Gray
+                        )
+                        Text(
+                            text = item.label,
+                            color = if (selected) Color.White else Color.Gray
+                        )
+                    }
+                },
+                colors = NavigationBarItemDefaults.colors(indicatorColor = Color.Black),
+                interactionSource = remember { MutableInteractionSource() },
                 alwaysShowLabel = true
             )
         }
