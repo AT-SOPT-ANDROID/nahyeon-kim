@@ -3,6 +3,7 @@ package org.sopt.at.navigation
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -11,7 +12,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import org.sopt.at.MyScreen
+import org.sopt.at.screen.MyScreen
 import org.sopt.at.screen.HistoryScreen
 import org.sopt.at.screen.HomeScreen
 import org.sopt.at.screen.LiveScreen
@@ -72,8 +73,10 @@ fun AppNavGraph(navController: NavHostController) {
             }
 
             composable("my") {
+                val registeredId by authViewModel.registeredId.collectAsState()
+
                 MyScreen(
-                    userId = authViewModel.registeredId.value,
+                    userId = registeredId,
                     onLogout = {
                         navController.navigate("signIn") {
                             popUpTo("my") { inclusive = true }
@@ -81,6 +84,7 @@ fun AppNavGraph(navController: NavHostController) {
                     }
                 )
             }
+
 
             composable(BottomNavItem.Home.route) {
                 HomeScreen(navController = navController)
