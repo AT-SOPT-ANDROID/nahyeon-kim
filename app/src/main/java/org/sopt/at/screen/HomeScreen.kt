@@ -21,38 +21,31 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import org.sopt.at.R
-import org.sopt.at.component.NoRippleInteractionSource
 import org.sopt.at.data.TvProgram
+import org.sopt.at.ui.theme.TivingTheme
 import org.sopt.at.viewmodel.AuthViewModel
 import org.sopt.at.viewmodel.HomeViewModel
-
 
 @Composable
 fun TopBar(navController: NavHostController) {
@@ -74,7 +67,7 @@ fun TopBar(navController: NavHostController) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_tv),
                 contentDescription = "TV Icon",
-                tint = Color.White,
+                tint = TivingTheme.colors.basicWhite,
                 modifier = Modifier
                     .size(50.dp)
                     .padding(end = 16.dp)
@@ -82,7 +75,7 @@ fun TopBar(navController: NavHostController) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_profile),
                 contentDescription = "Profile Icon",
-                tint = Color.White,
+                tint = TivingTheme.colors.basicWhite,
                 modifier = Modifier
                     .size(36.dp)
                     .clickable {
@@ -101,7 +94,6 @@ fun BannerView(viewModel: HomeViewModel) {
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(horizontal = 16.dp)
     ) {
-
         items(viewModel.bannerList, key = { it.id }) { program ->
             Image(
                 painter = painterResource(id = program.imageRes),
@@ -118,16 +110,17 @@ fun BannerView(viewModel: HomeViewModel) {
 
 @Composable
 fun Top20Section(
-    programs: List<TvProgram>,
-    content: @Composable () -> Unit
+    programs: List<TvProgram>, content: @Composable () -> Unit
 ) {
     Column(
         modifier = Modifier.padding(start = 16.dp)
     ) {
         Text(
             text = "오늘의 티빙 TOP 20",
-            color = Color.White,
-            style = MaterialTheme.typography.titleLarge,
+            color = TivingTheme.colors.basicWhite,
+            style = MaterialTheme.typography.titleLarge.copy(
+                fontFamily = TivingTheme.typography.title.fontFamily
+            ),
             modifier = Modifier.padding(bottom = 8.dp)
         )
 
@@ -135,7 +128,6 @@ fun Top20Section(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(end = 16.dp)
         ) {
-
             items(programs, key = { it.id }) { program ->
                 Box(
                     modifier = Modifier
@@ -155,12 +147,14 @@ fun Top20Section(
 
                     Text(
                         text = "${program.rank}",
-                        color = Color.White,
+                        color = TivingTheme.colors.basicWhite,
                         fontSize = 80.sp,
                         fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.displayLarge.copy(
-                            shadow = Shadow(
-                                color = Color.Black, offset = Offset(4f, 4f), blurRadius = 8f
+                            fontFamily = TivingTheme.typography.title.fontFamily, shadow = Shadow(
+                                color = TivingTheme.colors.basicBlack,
+                                offset = Offset(4f, 4f),
+                                blurRadius = 8f
                             )
                         ),
                         modifier = Modifier.align(Alignment.BottomStart)
@@ -180,8 +174,10 @@ fun NowBoarding(programs: List<TvProgram>) {
     ) {
         Text(
             text = "지금 방영 중 콘텐츠",
-            color = Color.White,
-            style = MaterialTheme.typography.titleLarge,
+            color = TivingTheme.colors.basicWhite,
+            style = MaterialTheme.typography.titleLarge.copy(
+                fontFamily = TivingTheme.typography.title.fontFamily
+            ),
             modifier = Modifier.padding(bottom = 8.dp)
         )
 
@@ -189,7 +185,6 @@ fun NowBoarding(programs: List<TvProgram>) {
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(end = 16.dp)
         ) {
-
             items(programs, key = { it.id }) { program ->
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -231,25 +226,24 @@ fun HomeScreen(
         stickyHeader {
             TabRow(
                 selectedTabIndex = selectedTabIndex,
-                containerColor = Color.Black,
-                contentColor = Color.White,
+                containerColor = TivingTheme.colors.basicBlack,
+                contentColor = TivingTheme.colors.basicWhite,
                 indicator = {},
-                divider = {}
-            ) {
+                divider = {}) {
                 tabTitles.forEachIndexed { index, title ->
                     Tab(
                         selected = selectedTabIndex == index,
                         onClick = { selectedTabIndex = index },
-                        selectedContentColor = Color.White,
-                        unselectedContentColor = Color.Gray,
+                        selectedContentColor = TivingTheme.colors.basicWhite,
+                        unselectedContentColor = TivingTheme.colors.gray02,
                         text = {
                             Text(
                                 text = title,
                                 fontSize = 10.sp,
-                                color = if (selectedTabIndex == index) Color.White else Color.Gray
+                                color = if (selectedTabIndex == index) TivingTheme.colors.basicWhite else TivingTheme.colors.gray02,
+                                fontFamily = TivingTheme.typography.title.fontFamily
                             )
-                        }
-                    )
+                        })
                 }
             }
         }
@@ -257,34 +251,39 @@ fun HomeScreen(
         item { BannerView(viewModel) }
 
         when (selectedTabIndex) {
-            0 -> { // 드라마
+            0 -> {
                 item {
                     Top20Section(programs = viewModel.top20List) {
                         NowBoarding(programs = viewModel.nowList)
                     }
                 }
             }
-            1 -> { // 예능
+
+            1 -> {
                 items(viewModel.entertainmentList, key = { it.id }) { program ->
                     ProgramItem(program)
                 }
             }
-            2 -> { // 영화
+
+            2 -> {
                 items(viewModel.movieList, key = { it.id }) { program ->
                     ProgramItem(program)
                 }
             }
-            3 -> { // 스포츠
+
+            3 -> {
                 items(viewModel.sportsList, key = { it.id }) { program ->
                     ProgramItem(program)
                 }
             }
-            4 -> { // 애니
+
+            4 -> {
                 items(viewModel.animeList, key = { it.id }) { program ->
                     ProgramItem(program)
                 }
             }
-            5 -> { // 뉴스
+
+            5 -> {
                 items(viewModel.newsList, key = { it.id }) { program ->
                     ProgramItem(program)
                 }
@@ -292,7 +291,6 @@ fun HomeScreen(
         }
     }
 }
-
 
 @Composable
 fun ProgramItem(program: TvProgram) {
@@ -313,8 +311,10 @@ fun ProgramItem(program: TvProgram) {
         Spacer(modifier = Modifier.width(16.dp))
         Text(
             text = program.title,
-            color = Color.White,
-            style = MaterialTheme.typography.titleMedium
+            color = TivingTheme.colors.basicWhite,
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontFamily = TivingTheme.typography.body.fontFamily
+            )
         )
     }
 }
