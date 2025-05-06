@@ -1,8 +1,8 @@
 package org.sopt.at.ui.theme
 
-import androidx.compose.ui.graphics.Color
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.graphics.Color
 
 val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)

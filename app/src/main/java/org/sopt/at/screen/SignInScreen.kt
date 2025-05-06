@@ -2,7 +2,14 @@ package org.sopt.at.screen
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
@@ -11,18 +18,20 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 import org.sopt.at.component.BackButton
 import org.sopt.at.component.CommonTextField
@@ -33,9 +42,7 @@ import org.sopt.at.viewmodel.AuthViewModel
 
 @Composable
 fun SignInScreen(
-    onSignUpClick: () -> Unit,
-    onLoginSuccess: () -> Unit,
-    authViewModel: AuthViewModel
+    onSignUpClick: () -> Unit, onLoginSuccess: () -> Unit, authViewModel: AuthViewModel
 ) {
     var id by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -88,9 +95,7 @@ fun SignInScreen(
             )
 
             CommonTextField(
-                value = id,
-                onValueChange = { id = it },
-                modifier = Modifier.fillMaxWidth()
+                value = id, onValueChange = { id = it }, modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(Modifier.height(12.dp))
@@ -108,11 +113,8 @@ fun SignInScreen(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(0.dp),
                 colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = if (isInputValid)
-                        TivingTheme.colors.brandRed
-                    else
-                        TivingTheme.colors.gray03,
-                    contentColor = TivingTheme.colors.basicWhite
+                    containerColor = if (isInputValid) TivingTheme.colors.brandRed
+                    else TivingTheme.colors.gray03, contentColor = TivingTheme.colors.basicWhite
                 ),
                 border = BorderStroke(1.dp, TivingTheme.colors.gray04),
                 interactionSource = NoRippleInteractionSource
@@ -162,12 +164,10 @@ fun SignInScreen(
                     color = TivingTheme.colors.gray02,
                     style = TivingTheme.typography.body,
                     modifier = Modifier.clickable(
-                        interactionSource = NoRippleInteractionSource,
-                        indication = null
+                        interactionSource = NoRippleInteractionSource, indication = null
                     ) {
                         onSignUpClick()
-                    }
-                )
+                    })
             }
 
             Spacer(Modifier.height(16.dp))

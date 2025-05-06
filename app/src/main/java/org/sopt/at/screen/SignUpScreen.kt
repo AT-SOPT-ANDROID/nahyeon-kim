@@ -20,10 +20,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import org.sopt.at.component.BackButton
 import org.sopt.at.component.CommonTextField
 import org.sopt.at.component.NoRippleInteractionSource
@@ -58,9 +56,7 @@ fun SignUpScreen(onSignUpSuccess: () -> Unit, authViewModel: AuthViewModel) {
         if (step == 1) {
             Column(modifier = Modifier.fillMaxWidth()) {
                 CommonTextField(
-                    value = id,
-                    onValueChange = { id = it },
-                    modifier = Modifier.fillMaxWidth()
+                    value = id, onValueChange = { id = it }, modifier = Modifier.fillMaxWidth()
                 )
 
                 Spacer(Modifier.height(8.dp))
