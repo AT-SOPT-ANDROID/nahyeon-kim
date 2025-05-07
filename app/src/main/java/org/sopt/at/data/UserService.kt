@@ -5,6 +5,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface UserService {
     @POST("/api/v1/auth/signup")
@@ -21,4 +22,9 @@ interface UserService {
     fun getNickname(
         @Header("userId") userId: Long
     ): Call<ResponseNicknameDto>
+
+    @GET("/api/v1/users")
+    fun searchNickname(
+        @Query("keyword") keyword: String?
+    ) : Call<ResponseNicknameListDto>
 }
