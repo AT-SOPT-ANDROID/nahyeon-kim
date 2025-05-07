@@ -9,4 +9,9 @@ interface UserService {
     fun signUp(
         @Body request: RequestSignUpDto
     ): Call<ResponseSignUpDto>
+
+    @POST("/api/v1/auth/signin")
+    fun signIn(
+        @Body request: RequestSignInDto
+    ): Call<ResponseSignInDto>
 }

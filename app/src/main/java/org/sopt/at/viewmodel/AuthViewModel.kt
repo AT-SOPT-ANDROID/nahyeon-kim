@@ -5,7 +5,10 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.serialization.Serializable
+import org.sopt.at.data.RequestSignInDto
 import org.sopt.at.data.RequestSignUpDto
+import org.sopt.at.data.ResponseSignInDto
 import org.sopt.at.data.ResponseSignUpDto
 import org.sopt.at.data.ServicePool
 import retrofit2.Call
@@ -31,7 +34,12 @@ class AuthViewModel : ViewModel() {
         return nickname.matches(Regex("^[가-힣a-zA-Z0-9]{1,20}$"))
     }
 
-    fun registerUser(id: String, password: String, nickname: String, onResult: (Boolean, String) -> Unit) {
+    fun registerUser(
+        id: String,
+        password: String,
+        nickname: String,
+        onResult: (Boolean, String) -> Unit
+    ) {
         val request = RequestSignUpDto(id, password, nickname)
 
         ServicePool.userService.signUp(request).enqueue(object : Callback<ResponseSignUpDto> {
@@ -53,5 +61,34 @@ class AuthViewModel : ViewModel() {
                 onResult(false, "네트워크 오류: ${t.message}")
             }
         })
+    }
+
+    fun loginUser(
+        id: String,
+        password: String,
+        onResult: (Boolean, String, Int?) -> Unit
+    ) {
+        val request = RequestSignInDto(id, password)
+
+        ServicePool.userService.signIn(request).enqueue(object : Callback<ResponseSignInDto> {
+            override fun onResponse(
+                call: Call<ResponseSignInDto>,
+                response: Response<ResponseSignInDto>
+            ) {
+                val body = response.body()
+                if (response.isSuccessful && body?.success == true && body.data != null) {
+                    val userId = body.data.userId
+                    onResult(true, "로그인 성공!", userId)
+                } else {
+                    onResult(false, body?.message ?: "로그인 실패", null)
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseSignInDto>, t: Throwable) {
+                onResult(false, "네트워크 오류: ${t.message}", null)
+            }
+
+        }
+        )
     }
 }

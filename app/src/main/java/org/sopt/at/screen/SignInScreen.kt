@@ -52,20 +52,21 @@ fun SignInScreen(
     val scope = rememberCoroutineScope()
     val isInputValid = id.isNotBlank() && password.isNotBlank()
     fun handleLogin() {
-        when {
-            id.isBlank() || password.isBlank() -> {
-                scope.launch {
-                    snackbarHostState.showSnackbar("아이디와 비밀번호를 입력해 주세요.")
+        if (!isInputValid) {
+            scope.launch {
+                snackbarHostState.showSnackbar("아이디와 비밀번호를 입력해 주세요.")
+            }
+            return
+        }
+
+        authViewModel.loginUser(id, password) { isSuccess, message, userId ->
+            scope.launch {
+                if (isSuccess) {
+                    onLoginSuccess()
+                } else {
+                    snackbarHostState.showSnackbar(message)
                 }
             }
-
-            id != authViewModel.registeredId.value || password != authViewModel.registeredPassword.value -> {
-                scope.launch {
-                    snackbarHostState.showSnackbar("ID 또는 비밀번호가 일치하지 않습니다.")
-                }
-            }
-
-            else -> onLoginSuccess()
         }
     }
 
