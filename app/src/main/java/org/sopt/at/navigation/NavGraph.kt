@@ -5,7 +5,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -13,7 +18,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import org.sopt.at.screen.*
+import org.sopt.at.screen.HistoryScreen
+import org.sopt.at.screen.HomeScreen
+import org.sopt.at.screen.LiveScreen
+import org.sopt.at.screen.MyScreen
+import org.sopt.at.screen.SearchScreen
+import org.sopt.at.screen.ShortsScreen
+import org.sopt.at.screen.SignInScreen
+import org.sopt.at.screen.SignUpScreen
 import org.sopt.at.viewmodel.AuthViewModel
 
 @Composable

@@ -93,7 +93,7 @@ class AuthViewModel : ViewModel() {
         )
     }
 
-    fun fetchNickname(userId: Long){
+    fun fetchNickname(userId: Long) {
         ServicePool.userService.getNickname(userId).enqueue(object : Callback<ResponseNicknameDto> {
             override fun onResponse(
                 call: Call<ResponseNicknameDto>,
@@ -106,9 +106,11 @@ class AuthViewModel : ViewModel() {
                     _nickname.value = "닉네임 조회 실패"
                 }
             }
+
             override fun onFailure(call: Call<ResponseNicknameDto>, t: Throwable) {
                 _nickname.value = "네트워크 오류"
             }
-        })
+        }
+        )
     }
 }

@@ -76,6 +76,7 @@ fun SignUpScreen(onSignUpSuccess: () -> Unit, authViewModel: AuthViewModel) {
                     )
                 }
             }
+
             2 -> {
                 Column(modifier = Modifier.fillMaxWidth()) {
                     PasswordTextField(
@@ -92,6 +93,7 @@ fun SignUpScreen(onSignUpSuccess: () -> Unit, authViewModel: AuthViewModel) {
                     )
                 }
             }
+
             3 -> {
                 Column(modifier = Modifier.fillMaxWidth()) {
                     CommonTextField(
@@ -126,10 +128,12 @@ fun SignUpScreen(onSignUpSuccess: () -> Unit, authViewModel: AuthViewModel) {
                         if (authViewModel.isValidId(id)) step = 2
                         else Toast.makeText(context, "아이디 형식을 확인해주세요.", Toast.LENGTH_SHORT).show()
                     }
+
                     2 -> {
                         if (authViewModel.isValidPassword(password)) step = 3
                         else Toast.makeText(context, "비밀번호 형식을 확인해주세요.", Toast.LENGTH_SHORT).show()
                     }
+
                     3 -> {
                         if (authViewModel.isValidNickname(nickname)) {
                             authViewModel.registerUser(id, password, nickname) { success, message ->
