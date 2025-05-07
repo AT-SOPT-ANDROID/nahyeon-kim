@@ -35,10 +35,10 @@ import org.sopt.at.component.NoRippleInteractionSource
 
 @Composable
 fun MyScreen(
-    userId: String,
+    userId: Long,
+    nickname: String,
     onLogout: () -> Unit
 ) {
-    val userDisplayName by remember(userId) { derivedStateOf { userId } }
 
     Column(
         modifier = Modifier
@@ -73,7 +73,7 @@ fun MyScreen(
                 Column {
                     Text("프로필", color = Color.White, fontSize = 18.sp)
                     Spacer(Modifier.height(4.dp))
-                    Text(text = userDisplayName, color = Color.White, fontSize = 16.sp)
+                    Text(text = nickname, color = Color.White, fontSize = 16.sp)
                 }
             }
         }

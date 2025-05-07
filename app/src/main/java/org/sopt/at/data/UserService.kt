@@ -2,6 +2,8 @@ package org.sopt.at.data
 
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface UserService {
@@ -14,4 +16,9 @@ interface UserService {
     fun signIn(
         @Body request: RequestSignInDto
     ): Call<ResponseSignInDto>
+
+    @GET("/api/v1/users/me")
+    fun getNickname(
+        @Header("userId") userId: Long
+    ): Call<ResponseNicknameDto>
 }

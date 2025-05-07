@@ -1,11 +1,12 @@
 package org.sopt.at.navigation
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.material3.Text
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
@@ -13,7 +14,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import org.sopt.at.screen.*
-
 import org.sopt.at.viewmodel.AuthViewModel
 
 @Composable
@@ -32,6 +32,8 @@ fun AppNavGraph(navController: NavHostController) {
         )
     }
 
+    var userIdState by remember { mutableStateOf<Long?>(null) }
+
     Scaffold(
         bottomBar = {
             if (currentRoute in bottomNavRoutes) {
@@ -48,7 +50,11 @@ fun AppNavGraph(navController: NavHostController) {
             composable(NavRoute.SignIn) {
                 SignInScreen(
                     onSignUpClick = { navController.navigate(NavRoute.SignUp) },
-                    onLoginSuccess = {
+                    onLoginSuccess = { userId ->
+                        userIdState = userId
+                        userId?.let {
+                            authViewModel.fetchNickname(it)
+                        }
                         navController.navigate(BottomNavItem.Home.route) {
                             popUpTo(NavRoute.SignIn) { inclusive = true }
                         }
@@ -69,17 +75,28 @@ fun AppNavGraph(navController: NavHostController) {
             }
 
             composable(NavRoute.My) {
-                val registeredId by authViewModel.registeredId.collectAsState()
-
-                MyScreen(
-                    userId = registeredId,
-                    onLogout = {
-                        navController.navigate(NavRoute.SignIn) {
-                            popUpTo(NavRoute.My) { inclusive = true }
+                val nickname by authViewModel.nickname.collectAsState()
+                if (userIdState != null && nickname.isNotBlank()) {
+                    MyScreen(
+                        userId = userIdState!!,
+                        nickname = nickname,
+                        onLogout = {
+                            navController.navigate(NavRoute.SignIn) {
+                                popUpTo(NavRoute.My) { inclusive = true }
+                            }
                         }
+                    )
+                } else {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("유저 정보를 불러오는 중입니다...", color = Color.Gray)
                     }
-                )
+                }
             }
+
+
 
             composable(BottomNavItem.Home.route) {
                 HomeScreen(navController = navController)

@@ -19,7 +19,7 @@ data class ResponseSignUpDto(
 
 @Serializable
 data class SignUpData(
-    val userId: Int,
+    val userId: Long,
     val nickname: String? = null
 )
 
@@ -35,4 +35,17 @@ data class ResponseSignInDto(
     val code: String,
     val message: String,
     val data: SignUpData?
+)
+
+@Serializable
+data class ResponseNicknameDto(
+    val success: Boolean,
+    val code: String,
+    val message: String,
+    val data: NicknameData?
+)
+
+@Serializable
+data class NicknameData(
+    val nickname: String
 )

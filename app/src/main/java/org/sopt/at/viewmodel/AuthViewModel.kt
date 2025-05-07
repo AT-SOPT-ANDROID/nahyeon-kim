@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.serialization.Serializable
 import org.sopt.at.data.RequestSignInDto
 import org.sopt.at.data.RequestSignUpDto
+import org.sopt.at.data.ResponseNicknameDto
 import org.sopt.at.data.ResponseSignInDto
 import org.sopt.at.data.ResponseSignUpDto
 import org.sopt.at.data.ServicePool
@@ -18,7 +18,8 @@ import retrofit2.Response
 class AuthViewModel : ViewModel() {
 
     private val _registeredId: MutableStateFlow<String> = MutableStateFlow("")
-    val registeredId: StateFlow<String> = _registeredId.asStateFlow()
+    private val _nickname: MutableStateFlow<String> = MutableStateFlow("")
+    val nickname: StateFlow<String> = _nickname.asStateFlow()
 
     var registeredPassword = mutableStateOf("")
 
@@ -66,7 +67,7 @@ class AuthViewModel : ViewModel() {
     fun loginUser(
         id: String,
         password: String,
-        onResult: (Boolean, String, Int?) -> Unit
+        onResult: (Boolean, String, Long?) -> Unit
     ) {
         val request = RequestSignInDto(id, password)
 
@@ -90,5 +91,24 @@ class AuthViewModel : ViewModel() {
 
         }
         )
+    }
+
+    fun fetchNickname(userId: Long){
+        ServicePool.userService.getNickname(userId).enqueue(object : Callback<ResponseNicknameDto> {
+            override fun onResponse(
+                call: Call<ResponseNicknameDto>,
+                response: Response<ResponseNicknameDto>
+            ) {
+                val body = response.body()
+                if (response.isSuccessful && body?.success == true && body.data != null) {
+                    _nickname.value = body.data.nickname
+                } else {
+                    _nickname.value = "닉네임 조회 실패"
+                }
+            }
+            override fun onFailure(call: Call<ResponseNicknameDto>, t: Throwable) {
+                _nickname.value = "네트워크 오류"
+            }
+        })
     }
 }

@@ -43,7 +43,7 @@ import org.sopt.at.viewmodel.AuthViewModel
 @Composable
 fun SignInScreen(
     onSignUpClick: () -> Unit,
-    onLoginSuccess: () -> Unit,
+    onLoginSuccess: (Long?) -> Unit,
     authViewModel: AuthViewModel
 ) {
     var id by remember { mutableStateOf("") }
@@ -62,7 +62,7 @@ fun SignInScreen(
         authViewModel.loginUser(id, password) { isSuccess, message, userId ->
             scope.launch {
                 if (isSuccess) {
-                    onLoginSuccess()
+                    onLoginSuccess(userId)
                 } else {
                     snackbarHostState.showSnackbar(message)
                 }
