@@ -21,9 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import org.sopt.at.component.NoRippleInteractionSource
 import org.sopt.at.ui.theme.TivingTheme
 import org.sopt.at.viewmodel.MyViewModel
@@ -42,28 +40,28 @@ fun EditNicknameScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(TivingTheme.colors.basicBlack)
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("닉네임 변경", color = Color.White, fontSize = 20.sp)
+        Text("닉네임 변경", color = TivingTheme.colors.basicWhite, style = TivingTheme.typography.title)
 
         Spacer(modifier = Modifier.height(20.dp))
 
         OutlinedTextField(
             value = nickname,
             onValueChange = { nickname = it },
-            label = { Text("새 닉네임", color = Color.Gray) },
+            label = { Text("새 닉네임", color = TivingTheme.colors.gray03, style = TivingTheme.typography.caption) },
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = Color.DarkGray,
-                unfocusedContainerColor = Color.DarkGray,
-                focusedBorderColor = Color.White,
-                unfocusedBorderColor = Color.DarkGray,
-                focusedTextColor = Color.White,
-                unfocusedTextColor = Color.White,
-                cursorColor = Color.White
+                focusedContainerColor = TivingTheme.colors.gray05,
+                unfocusedContainerColor = TivingTheme.colors.gray05,
+                focusedBorderColor = TivingTheme.colors.basicWhite,
+                unfocusedBorderColor = TivingTheme.colors.gray05,
+                focusedTextColor = TivingTheme.colors.basicWhite,
+                unfocusedTextColor = TivingTheme.colors.basicWhite,
+                cursorColor = TivingTheme.colors.basicWhite
             )
         )
 
@@ -92,7 +90,7 @@ fun EditNicknameScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         if (message.isNotBlank()) {
-            Text(text = message, color = Color.LightGray)
+            Text(text = message, color = TivingTheme.colors.gray01)
         }
     }
 }
