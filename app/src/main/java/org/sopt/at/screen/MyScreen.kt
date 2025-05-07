@@ -34,9 +34,9 @@ import org.sopt.at.component.NoRippleInteractionSource
 fun MyScreen(
     userId: Long,
     nickname: String,
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    onClickEditNickname: () -> Unit
 ) {
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -67,10 +67,22 @@ fun MyScreen(
                         .padding(end = 16.dp)
                 )
 
-                Column {
+                Column(modifier = Modifier.weight(1f)) {
                     Text("프로필", color = Color.White, fontSize = 18.sp)
                     Spacer(Modifier.height(4.dp))
                     Text(text = nickname, color = Color.White, fontSize = 16.sp)
+                }
+
+                OutlinedButton(
+                    onClick = onClickEditNickname,
+                    border = BorderStroke(1.dp, Color.LightGray),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = Color.White
+                    ),
+                    modifier = Modifier.height(36.dp)
+                ) {
+                    Text("설정", fontSize = 12.sp)
                 }
             }
         }

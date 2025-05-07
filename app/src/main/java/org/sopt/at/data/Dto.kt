@@ -62,3 +62,16 @@ data class ResponseNicknameListDto(
 data class NicknameListData(
     val nicknameList: List<String>
 )
+
+@Serializable
+data class ResponseModNicknameDto(
+    val success: Boolean,
+    val code: String,
+    val message: String,
+    val data: RequestModNicknameDto?
+)
+
+@Serializable
+data class RequestModNicknameDto(
+    val nickname: String
+)

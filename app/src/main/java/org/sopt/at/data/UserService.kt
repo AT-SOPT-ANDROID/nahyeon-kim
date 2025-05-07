@@ -4,6 +4,7 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Query
 
@@ -27,4 +28,10 @@ interface UserService {
     fun searchNickname(
         @Query("keyword") keyword: String?
     ) : Call<ResponseNicknameListDto>
+
+    @PATCH("/api/v1/users")
+    fun changeNickname(
+        @Header("userId") userId: Long,
+        @Body body: RequestModNicknameDto
+    ): Call<ResponseModNicknameDto>
 }

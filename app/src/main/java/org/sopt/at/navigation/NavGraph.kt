@@ -18,6 +18,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import org.sopt.at.screen.EditNicknameScreen
 import org.sopt.at.screen.HistoryScreen
 import org.sopt.at.screen.HomeScreen
 import org.sopt.at.screen.LiveScreen
@@ -31,7 +32,6 @@ import org.sopt.at.viewmodel.AuthViewModel
 @Composable
 fun AppNavGraph(navController: NavHostController) {
     val authViewModel = remember { AuthViewModel() }
-
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = remember(navBackStackEntry) { navBackStackEntry?.destination?.route }
     val bottomNavRoutes = remember {
@@ -96,6 +96,9 @@ fun AppNavGraph(navController: NavHostController) {
                             navController.navigate(NavRoute.SignIn) {
                                 popUpTo(NavRoute.My) { inclusive = true }
                             }
+                        },
+                        onClickEditNickname = {
+                            navController.navigate("editNickname")
                         }
                     )
                 } else {
@@ -108,7 +111,17 @@ fun AppNavGraph(navController: NavHostController) {
                 }
             }
 
-
+            composable(NavRoute.EditNickname) {
+                userIdState?.let { safeUserId ->
+                    EditNicknameScreen(
+                        userId = safeUserId,
+                        onNicknameChanged = {
+                            authViewModel.fetchNickname(safeUserId)
+                            navController.popBackStack()
+                        }
+                    )
+                }
+            }
 
             composable(BottomNavItem.Home.route) {
                 HomeScreen(navController = navController)
