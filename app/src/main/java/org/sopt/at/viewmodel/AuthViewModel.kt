@@ -19,6 +19,7 @@ class AuthViewModel : ViewModel() {
 
     private val _registeredId: MutableStateFlow<String> = MutableStateFlow("")
     private val _nickname: MutableStateFlow<String> = MutableStateFlow("")
+    private val _userId = MutableStateFlow<Long?>(null)
     val nickname: StateFlow<String> = _nickname.asStateFlow()
 
     var registeredPassword = mutableStateOf("")
@@ -33,6 +34,10 @@ class AuthViewModel : ViewModel() {
 
     fun isValidNickname(nickname: String): Boolean {
         return nickname.matches(Regex("^[가-힣a-zA-Z0-9]{1,20}$"))
+    }
+
+    fun setUserId(id: Long) {
+        _userId.value = id
     }
 
     fun registerUser(

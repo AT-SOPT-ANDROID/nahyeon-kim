@@ -28,6 +28,11 @@ import org.sopt.at.screen.ShortsScreen
 import org.sopt.at.screen.SignInScreen
 import org.sopt.at.screen.SignUpScreen
 import org.sopt.at.viewmodel.AuthViewModel
+import androidx.compose.runtime.LaunchedEffect
+import org.sopt.at.util.UserPrefs
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun AppNavGraph(navController: NavHostController) {
@@ -45,6 +50,21 @@ fun AppNavGraph(navController: NavHostController) {
     }
 
     var userIdState by remember { mutableStateOf<Long?>(null) }
+
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        val savedUserId = UserPrefs.getUserId()
+        if (savedUserId != null) {
+            userIdState = savedUserId
+            authViewModel.setUserId(savedUserId)
+            authViewModel.fetchNickname(savedUserId)
+            navController.navigate(BottomNavItem.Home.route) {
+                popUpTo(NavRoute.SignIn) { inclusive = true }
+            }
+        }
+    }
 
     Scaffold(
         bottomBar = {
@@ -65,7 +85,11 @@ fun AppNavGraph(navController: NavHostController) {
                     onLoginSuccess = { userId ->
                         userIdState = userId
                         userId?.let {
+                            authViewModel.setUserId(it)
                             authViewModel.fetchNickname(it)
+                            scope.launch {
+                                UserPrefs.saveUserId(it)
+                            }
                         }
                         navController.navigate(BottomNavItem.Home.route) {
                             popUpTo(NavRoute.SignIn) { inclusive = true }
@@ -93,6 +117,7 @@ fun AppNavGraph(navController: NavHostController) {
                         userId = userIdState!!,
                         nickname = nickname,
                         onLogout = {
+                            UserPrefs.clearUserId()
                             navController.navigate(NavRoute.SignIn) {
                                 popUpTo(NavRoute.My) { inclusive = true }
                             }

@@ -24,7 +24,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import org.sopt.at.R
 import org.sopt.at.component.BackButton
 import org.sopt.at.component.NoRippleInteractionSource
@@ -33,7 +32,7 @@ import org.sopt.at.ui.theme.TivingTheme
 
 @Composable
 fun MyScreen(
-    userId: Long,
+    userId: Long?,
     nickname: String,
     onLogout: () -> Unit,
     onClickEditNickname: () -> Unit
