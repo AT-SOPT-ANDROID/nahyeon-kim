@@ -1,4 +1,4 @@
-package org.sopt.at.data
+package org.sopt.at.data.model
 
 import kotlinx.serialization.Serializable
 

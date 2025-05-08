@@ -22,7 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.sopt.at.component.NoRippleInteractionSource
+import org.sopt.at.util.NoRippleInteractionSource
 import org.sopt.at.ui.theme.TivingTheme
 import org.sopt.at.viewmodel.MyViewModel
 

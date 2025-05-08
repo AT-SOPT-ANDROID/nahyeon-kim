@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import org.sopt.at.data.ResponseNicknameListDto
-import org.sopt.at.data.ServicePool
+import org.sopt.at.data.model.ResponseNicknameListDto
+import org.sopt.at.data.api.ServicePool
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

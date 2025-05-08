@@ -1,4 +1,4 @@
-package org.sopt.at.component
+package org.sopt.at.util
 
 import androidx.compose.foundation.interaction.Interaction
 import androidx.compose.foundation.interaction.MutableInteractionSource

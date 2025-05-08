@@ -1,9 +1,9 @@
 package org.sopt.at.viewmodel
 
 import androidx.lifecycle.ViewModel
-import org.sopt.at.data.RequestModNicknameDto
-import org.sopt.at.data.ResponseModNicknameDto
-import org.sopt.at.data.ServicePool
+import org.sopt.at.data.model.RequestModNicknameDto
+import org.sopt.at.data.model.ResponseModNicknameDto
+import org.sopt.at.data.api.ServicePool
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

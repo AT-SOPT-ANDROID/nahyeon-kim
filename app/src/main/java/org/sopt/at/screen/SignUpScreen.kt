@@ -26,7 +26,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import org.sopt.at.component.BackButton
 import org.sopt.at.component.CommonTextField
-import org.sopt.at.component.NoRippleInteractionSource
+import org.sopt.at.util.NoRippleInteractionSource
 import org.sopt.at.component.PasswordTextField
 import org.sopt.at.ui.theme.TivingTheme
 import org.sopt.at.viewmodel.AuthViewModel

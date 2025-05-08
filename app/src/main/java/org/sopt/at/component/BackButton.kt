@@ -13,6 +13,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import org.sopt.at.R
 import org.sopt.at.ui.theme.TivingTheme
+import org.sopt.at.util.NoRippleInteractionSource
 
 @Composable
 fun BackButton(

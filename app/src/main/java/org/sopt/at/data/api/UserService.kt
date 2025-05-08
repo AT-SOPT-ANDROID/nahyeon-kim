@@ -1,5 +1,13 @@
-package org.sopt.at.data
+package org.sopt.at.data.api
 
+import org.sopt.at.data.model.RequestModNicknameDto
+import org.sopt.at.data.model.RequestSignInDto
+import org.sopt.at.data.model.RequestSignUpDto
+import org.sopt.at.data.model.ResponseModNicknameDto
+import org.sopt.at.data.model.ResponseNicknameDto
+import org.sopt.at.data.model.ResponseNicknameListDto
+import org.sopt.at.data.model.ResponseSignInDto
+import org.sopt.at.data.model.ResponseSignUpDto
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET

@@ -26,7 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import org.sopt.at.R
 import org.sopt.at.component.BackButton
-import org.sopt.at.component.NoRippleInteractionSource
+import org.sopt.at.util.NoRippleInteractionSource
 import org.sopt.at.ui.theme.TivingTheme
 
 

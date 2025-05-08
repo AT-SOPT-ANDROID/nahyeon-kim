@@ -1,4 +1,4 @@
-package org.sopt.at.data
+package org.sopt.at.data.api
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
