@@ -19,11 +19,11 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.SpanStyle
@@ -46,8 +46,12 @@ fun SignInScreen(
     onLoginSuccess: (Long?) -> Unit,
     authViewModel: AuthViewModel
 ) {
-    var id by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    LaunchedEffect(Unit) {
+        authViewModel.clearInputFields()
+    }
+
+    val id by authViewModel.id.collectAsState()
+    val password by authViewModel.password.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val isInputValid = id.isNotBlank() && password.isNotBlank()
@@ -92,13 +96,13 @@ fun SignInScreen(
 
             CommonTextField(
                 value = id,
-                onValueChange = { id = it },
+                onValueChange = { authViewModel.updateId(it) },
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(Modifier.height(12.dp))
             PasswordTextField(
                 value = password,
-                onValueChange = { password = it },
+                onValueChange = { authViewModel.updatePassword(it) },
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(Modifier.height(24.dp))

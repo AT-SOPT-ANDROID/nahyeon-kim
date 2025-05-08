@@ -20,9 +20,27 @@ class AuthViewModel : ViewModel() {
     private val _registeredId: MutableStateFlow<String> = MutableStateFlow("")
     private val _nickname: MutableStateFlow<String> = MutableStateFlow("")
     private val _userId = MutableStateFlow<Long?>(null)
+    private val _id = MutableStateFlow("")
+    private val _password = MutableStateFlow("")
+
+    val id: StateFlow<String> = _id.asStateFlow()
+    val password: StateFlow<String> = _password.asStateFlow()
     val nickname: StateFlow<String> = _nickname.asStateFlow()
 
+
     var registeredPassword = mutableStateOf("")
+
+    fun updateId(newId: String) {
+        _id.value = newId
+    }
+
+    fun updatePassword(newPassword: String) {
+        _password.value = newPassword
+    }
+
+    fun updateNickname(newNickname: String) {
+        _nickname.value = newNickname
+    }
 
     fun isValidId(id: String): Boolean {
         return id.matches(Regex("^[A-Za-z0-9]{8,20}$"))
@@ -118,4 +136,11 @@ class AuthViewModel : ViewModel() {
         }
         )
     }
+
+    fun clearInputFields() {
+        _id.value = ""
+        _password.value = ""
+        _nickname.value = ""
+    }
+
 }

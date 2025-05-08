@@ -14,9 +14,10 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -32,10 +33,14 @@ import org.sopt.at.viewmodel.AuthViewModel
 
 @Composable
 fun SignUpScreen(onSignUpSuccess: () -> Unit, authViewModel: AuthViewModel) {
+    LaunchedEffect(Unit) {
+        authViewModel.clearInputFields()
+    }
+
     var step by remember { mutableIntStateOf(1) }
-    var id by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var nickname by remember { mutableStateOf("") }
+    val id by authViewModel.id.collectAsState()
+    val password by authViewModel.password.collectAsState()
+    val nickname by authViewModel.nickname.collectAsState()
     val context = LocalContext.current
 
     Column(
@@ -64,7 +69,7 @@ fun SignUpScreen(onSignUpSuccess: () -> Unit, authViewModel: AuthViewModel) {
                 Column(modifier = Modifier.fillMaxWidth()) {
                     CommonTextField(
                         value = id,
-                        onValueChange = { id = it },
+                        onValueChange = { authViewModel.updateId(it) },
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(Modifier.height(8.dp))
@@ -81,7 +86,7 @@ fun SignUpScreen(onSignUpSuccess: () -> Unit, authViewModel: AuthViewModel) {
                 Column(modifier = Modifier.fillMaxWidth()) {
                     PasswordTextField(
                         value = password,
-                        onValueChange = { password = it },
+                        onValueChange = { authViewModel.updatePassword(it) },
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(Modifier.height(8.dp))
@@ -98,7 +103,7 @@ fun SignUpScreen(onSignUpSuccess: () -> Unit, authViewModel: AuthViewModel) {
                 Column(modifier = Modifier.fillMaxWidth()) {
                     CommonTextField(
                         value = nickname,
-                        onValueChange = { nickname = it },
+                        onValueChange = { authViewModel.updateNickname(it) },
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(Modifier.height(8.dp))
