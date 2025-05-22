@@ -4,4 +4,5 @@ object NavRoute {
     const val SignIn = "signIn"
     const val SignUp = "signUp"
     const val My = "my"
+    const val EditNickname = "editNickname"
 }

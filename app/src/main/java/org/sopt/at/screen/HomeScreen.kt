@@ -42,7 +42,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import org.sopt.at.R
-import org.sopt.at.data.TvProgram
+import org.sopt.at.data.entity.TvProgram
 import org.sopt.at.ui.theme.TivingTheme
 import org.sopt.at.viewmodel.AuthViewModel
 import org.sopt.at.viewmodel.HomeViewModel

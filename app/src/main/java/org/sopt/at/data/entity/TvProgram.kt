@@ -1,4 +1,4 @@
-package org.sopt.at.data
+package org.sopt.at.data.entity
 
 data class TvProgram(
     val id: Int,

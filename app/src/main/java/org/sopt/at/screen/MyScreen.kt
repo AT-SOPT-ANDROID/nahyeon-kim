@@ -18,32 +18,29 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import org.sopt.at.R
 import org.sopt.at.component.BackButton
-import org.sopt.at.component.NoRippleInteractionSource
+import org.sopt.at.util.NoRippleInteractionSource
+import org.sopt.at.ui.theme.TivingTheme
 
 
 @Composable
 fun MyScreen(
-    userId: String,
-    onLogout: () -> Unit
+    userId: Long?,
+    nickname: String,
+    onLogout: () -> Unit,
+    onClickEditNickname: () -> Unit
 ) {
-    val userDisplayName by remember(userId) { derivedStateOf { userId } }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(TivingTheme.colors.basicBlack)
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -56,7 +53,7 @@ fun MyScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.DarkGray, RoundedCornerShape(12.dp))
+                .background(TivingTheme.colors.gray05, RoundedCornerShape(12.dp))
                 .padding(20.dp)
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -70,10 +67,22 @@ fun MyScreen(
                         .padding(end = 16.dp)
                 )
 
-                Column {
-                    Text("프로필", color = Color.White, fontSize = 18.sp)
+                Column(modifier = Modifier.weight(1f)) {
+                    Text("프로필", color = TivingTheme.colors.basicWhite, style = TivingTheme.typography.subTitle)
                     Spacer(Modifier.height(4.dp))
-                    Text(text = userDisplayName, color = Color.White, fontSize = 16.sp)
+                    Text(text = nickname, color = TivingTheme.colors.basicWhite, style = TivingTheme.typography.body)
+                }
+
+                OutlinedButton(
+                    onClick = onClickEditNickname,
+                    border = BorderStroke(1.dp, color = TivingTheme.colors.gray01),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = TivingTheme.colors.basicWhite
+                    ),
+                    modifier = Modifier.height(36.dp)
+                ) {
+                    Text("설정", style = TivingTheme.typography.button)
                 }
             }
         }
@@ -85,12 +94,12 @@ fun MyScreen(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(0.dp),
             colors = ButtonDefaults.outlinedButtonColors(
-                containerColor = Color.Black, contentColor = Color.White
+                containerColor = TivingTheme.colors.basicBlack, contentColor = TivingTheme.colors.basicWhite
             ),
-            border = BorderStroke(1.dp, Color.DarkGray),
+            border = BorderStroke(1.dp, color = TivingTheme.colors.gray05),
             interactionSource = NoRippleInteractionSource
         ) {
-            Text("로그아웃", color = Color.LightGray)
+            Text("로그아웃", color = TivingTheme.colors.gray01, style = TivingTheme.typography.button)
         }
     }
 }

@@ -12,12 +12,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import org.sopt.at.R
+import org.sopt.at.ui.theme.TivingTheme
 
 @Composable
 fun PasswordTextField(
@@ -28,7 +28,9 @@ fun PasswordTextField(
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        placeholder = { Text("비밀번호", color = Color.White) },
+        placeholder = { Text("비밀번호",
+            color = TivingTheme.colors.basicWhite,
+            style =  TivingTheme.typography.caption) },
         singleLine = true,
         modifier = modifier,
         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
@@ -40,18 +42,18 @@ fun PasswordTextField(
                 Icon(
                     painter = painterResource(id = icon),
                     contentDescription = contentDesc,
-                    tint = Color.White
+                    tint = TivingTheme.colors.basicWhite
                 )
             }
         },
         colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = Color.DarkGray,
-            unfocusedContainerColor = Color.DarkGray,
-            focusedBorderColor = Color.White,
-            unfocusedBorderColor = Color.DarkGray,
-            focusedTextColor = Color.White,
-            unfocusedTextColor = Color.White,
-            cursorColor = Color.White
+            focusedContainerColor = TivingTheme.colors.gray05,
+            unfocusedContainerColor = TivingTheme.colors.gray05,
+            focusedBorderColor = TivingTheme.colors.basicWhite,
+            unfocusedBorderColor = TivingTheme.colors.gray05,
+            focusedTextColor = TivingTheme.colors.basicWhite,
+            unfocusedTextColor = TivingTheme.colors.basicWhite,
+            cursorColor = TivingTheme.colors.basicWhite
         )
     )
 }

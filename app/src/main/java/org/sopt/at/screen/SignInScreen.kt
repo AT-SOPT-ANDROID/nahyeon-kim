@@ -19,11 +19,11 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.SpanStyle
@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.sopt.at.component.BackButton
 import org.sopt.at.component.CommonTextField
-import org.sopt.at.component.NoRippleInteractionSource
+import org.sopt.at.util.NoRippleInteractionSource
 import org.sopt.at.component.PasswordTextField
 import org.sopt.at.ui.theme.TivingTheme
 import org.sopt.at.viewmodel.AuthViewModel
@@ -43,29 +43,34 @@ import org.sopt.at.viewmodel.AuthViewModel
 @Composable
 fun SignInScreen(
     onSignUpClick: () -> Unit,
-    onLoginSuccess: () -> Unit,
+    onLoginSuccess: (Long?) -> Unit,
     authViewModel: AuthViewModel
 ) {
-    var id by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    LaunchedEffect(Unit) {
+        authViewModel.clearInputFields()
+    }
+
+    val id by authViewModel.id.collectAsState()
+    val password by authViewModel.password.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val isInputValid = id.isNotBlank() && password.isNotBlank()
     fun handleLogin() {
-        when {
-            id.isBlank() || password.isBlank() -> {
-                scope.launch {
-                    snackbarHostState.showSnackbar("아이디와 비밀번호를 입력해 주세요.")
+        if (!isInputValid) {
+            scope.launch {
+                snackbarHostState.showSnackbar("아이디와 비밀번호를 입력해 주세요.")
+            }
+            return
+        }
+
+        authViewModel.loginUser(id, password) { isSuccess, message, userId ->
+            scope.launch {
+                if (isSuccess) {
+                    onLoginSuccess(userId)
+                } else {
+                    snackbarHostState.showSnackbar(message)
                 }
             }
-
-            id != authViewModel.registeredId.value || password != authViewModel.registeredPassword.value -> {
-                scope.launch {
-                    snackbarHostState.showSnackbar("ID 또는 비밀번호가 일치하지 않습니다.")
-                }
-            }
-
-            else -> onLoginSuccess()
         }
     }
 
@@ -91,13 +96,13 @@ fun SignInScreen(
 
             CommonTextField(
                 value = id,
-                onValueChange = { id = it },
+                onValueChange = { authViewModel.updateId(it) },
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(Modifier.height(12.dp))
             PasswordTextField(
                 value = password,
-                onValueChange = { password = it },
+                onValueChange = { authViewModel.updatePassword(it) },
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(Modifier.height(24.dp))

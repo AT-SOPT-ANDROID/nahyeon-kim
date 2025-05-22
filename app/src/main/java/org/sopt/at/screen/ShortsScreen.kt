@@ -3,8 +3,9 @@ package org.sopt.at.screen
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import org.sopt.at.ui.theme.TivingTheme
 
 @Composable
 fun ShortsScreen() {
-    Text(text = "SHORTS", color = Color.White)
+    Text(text = "SHORTS", color = TivingTheme.colors.basicWhite, style = TivingTheme.typography.body)
 }

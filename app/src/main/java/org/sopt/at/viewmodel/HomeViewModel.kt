@@ -2,7 +2,7 @@ package org.sopt.at.viewmodel
 
 import androidx.lifecycle.ViewModel
 import org.sopt.at.R
-import org.sopt.at.data.TvProgram
+import org.sopt.at.data.entity.TvProgram
 
 class HomeViewModel : ViewModel() {
 
