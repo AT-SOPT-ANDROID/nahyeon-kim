@@ -18,14 +18,14 @@ import retrofit2.http.Query
 
 interface UserService {
     @POST("/api/v1/auth/signup")
-    fun signUp(
+    suspend fun signUp(
         @Body request: RequestSignUpDto
-    ): Call<ResponseSignUpDto>
+    ): ResponseSignUpDto
 
     @POST("/api/v1/auth/signin")
-    fun signIn(
+    suspend fun signIn(
         @Body request: RequestSignInDto
-    ): Call<ResponseSignInDto>
+    ): ResponseSignInDto
 
     @GET("/api/v1/users/me")
     fun getNickname(
