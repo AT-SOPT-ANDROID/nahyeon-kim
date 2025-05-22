@@ -28,18 +28,18 @@ interface UserService {
     ): ResponseSignInDto
 
     @GET("/api/v1/users/me")
-    fun getNickname(
+    suspend fun getNickname(
         @Header("userId") userId: Long
-    ): Call<ResponseNicknameDto>
+    ): ResponseNicknameDto
 
     @GET("/api/v1/users")
-    fun searchNickname(
+     suspend fun searchNickname(
         @Query("keyword") keyword: String?
-    ) : Call<ResponseNicknameListDto>
+    ) : ResponseNicknameListDto
 
     @PATCH("/api/v1/users")
-    fun changeNickname(
+    suspend fun changeNickname(
         @Header("userId") userId: Long,
         @Body body: RequestModNicknameDto
-    ): Call<ResponseModNicknameDto>
+    ): ResponseModNicknameDto
 }

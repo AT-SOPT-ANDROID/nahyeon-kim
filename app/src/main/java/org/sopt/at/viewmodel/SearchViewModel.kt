@@ -1,39 +1,27 @@
 package org.sopt.at.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import org.sopt.at.data.model.ResponseNicknameListDto
-import org.sopt.at.data.api.ServicePool
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.launch
+import org.sopt.at.data.api.ServicePool.userService
 
 class SearchViewModel : ViewModel() {
     private val _searchResult = MutableStateFlow<List<String>>(emptyList())
     val searchResult: StateFlow<List<String>> = _searchResult.asStateFlow()
 
-    fun searchNickname(keyword: String) {
+    fun searchNickname(keyword: String) = viewModelScope.launch {
         val requestKeyword = if (keyword.isBlank()) null else keyword
 
-        ServicePool.userService.searchNickname(requestKeyword)
-            .enqueue(object : Callback<ResponseNicknameListDto> {
-                override fun onResponse(
-                    call: Call<ResponseNicknameListDto>,
-                    response: Response<ResponseNicknameListDto>
-                ) {
-                    val body = response.body()
-                    if (response.isSuccessful && body?.success == true) {
-                        _searchResult.value = body.data.nicknameList
-                    } else {
-                        _searchResult.value = emptyList()
-                    }
-                }
-                override fun onFailure(call: Call<ResponseNicknameListDto>, t: Throwable) {
-                    _searchResult.value = emptyList()
-                }
-
-            })
+        runCatching {
+            userService.searchNickname(requestKeyword)
+        }.onSuccess { response ->
+            _searchResult.value = response.data.nicknameList
+        }.onFailure {
+            _searchResult.value = emptyList()
+        }
     }
+
 }
